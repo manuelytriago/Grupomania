@@ -1,12 +1,12 @@
 <template>
-
-
   <div class="hello">
     <h1>{{ msg }}</h1>
    
 <main class="form-signin">
   
-  <form>
+    <h1 class="h3 mb-3 fw-normal">You are log in</h1>
+
+  <!--<form>
     <img class="mb-4" src="../assets/icon.png" alt="" width="72" height="72">
     
     <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
@@ -18,10 +18,6 @@
     <div class="form-floating">
       <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="password">
       <label for="floatingPassword">Password</label>
-    </div>
-    <div class="form-floating">
-      <input type="password" class="form-control" id="floatingPassword2" placeholder="password confirmation" v-model="password_confirmation">
-      <label for="floatingPassword2">Password Confirmation</label>
     </div>
 
     <div class="checkbox mb-3">
@@ -39,7 +35,7 @@
     
     </div>
     <p class="mt-5 mb-3 text-muted">&copy; 2020–2021</p>
-  </form>
+  </form>-->
 </main>
 
   </div>
@@ -54,7 +50,6 @@ export default {
     return {
       username: "",
       password: "",
-      password_confirmation: ""
     };
   },
   props: {
@@ -65,26 +60,33 @@ export default {
       e.preventDefault()
 
       if (this.password === this.password_confirmation && this.password.length > 0) {
-        let url = "http://localhost:3000/api/auth/signup";
-        let data1 = {
-          email : this.username,
-          password : this.password,
-        }
-          
-        
-        console.log(data1);
-        this.$http.post(url, data1)
+        let url = "http://localhost:3000/signup"
+
+        this.$http.post(url, {
+          //name: this.name,
+          email: this.email,
+          password: this.password,
+          //is_admin: this.is_admin
+        })
           .then(response => {
-            console.log(response);
-                     this.$router.push('/')
-            
+            localStorage.setItem('user', JSON.stringify(response.data.user))
+            localStorage.setItem('jwt',response.data.token)
+
+            if (localStorage.getItem('jwt') != null) {
+              this.$emit('loggedIn')
+              if (this.$route.params.nextUrl != null) {
+                this.$router.push(this.$route.params.nextUrl)
+              } else {
+                this.$router.push('/')
+              }
+            }
           })
           .catch(error => {
             console.error(error);
           });
       } else {
         this.password = ""
-        this.password_confirmation = ""
+        this.passwordConfirm = ""
 
         return alert("Passwords do not match")
       }
@@ -146,11 +148,6 @@ body {
 }
 
 .form-signin input[type="password"] {
-  margin-bottom: 0px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-#floatingPassword2 {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;

@@ -1,12 +1,25 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> <!--|
-      <router-link to="/about">About</router-link> -->
-    </div>
+      <router-link v-if="$auth.isAuthenticated" @click.prevent="logout" to="/">Log Out</router-link>
+      <router-link v-else to="/">Sign In</router-link> |
+      <router-link to="/signup">Sign Up</router-link> 
+       </div>
     <router-view/>
   </div>
-</template>./components/SingUp.vue
+</template>
+
+<script>
+  export default {
+    name: 'LogoutButton',
+    methods: {
+      logout() {
+        this.$auth.logout();
+        this.$router.push({ path: '/' });
+      },
+    },
+  };
+</script>
 
 <style lang="scss">
 #app {
