@@ -1,22 +1,60 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link v-if="$auth.isAuthenticated" @click.prevent="logout" to="/">Log Out</router-link>
-      <router-link v-else to="/">Sign In</router-link> |
-      <router-link to="/signup">Sign Up</router-link> 
-       </div>
+      <router-link v-if="!isdashboardPage()" to="/">Log Out | </router-link> 
+      <router-link v-if="!isauth()" to="/"> Sign In |</router-link>
+      <router-link v-if="!isauth()" to="/signup"> Sign Up |</router-link> 
+      <router-link v-if="!isdashboardPage()" to="/profile"> Profile </router-link> 
+    </div>
     <router-view/>
   </div>
 </template>
 
 <script>
+
+
   export default {
     name: 'LogoutButton',
     methods: {
-      logout() {
-        this.$auth.logout();
-        this.$router.push({ path: '/' });
+      isdashboardPage: function() {
+        if ( this.$route.path === '/profile' ||  this.$route.path === '/' || this.$route.path === '/signup'){
+          return true
+        }else{
+          return false
+        }
       },
+      isauth: function() {
+        const user =  localStorage.getItem('user');
+        if(user){
+          return true;
+        }else{
+          return false;
+        }
+      }
+    /*logout() {
+      this.$store.dispatch(AUTH_LOGOUT)
+      .then(() => {
+        this.$router.push('/login')
+      })
+    },
+     logout() {
+        
+        window.onbeforeunload = function (){
+          Storage.clear();
+        localStorage.clear();
+        localStorage.removeItem('vuex');
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('user');
+        localStorage.clear();
+        }
+        localStorage.setItem('jwt',"")
+        localStorage.setItem('user',"")
+        this.$router.push('/');
+      },
+       beforeDestroy() {
+          Storage.clear();
+      localStorage.clear();
+   }*/
     },
   };
 </script>

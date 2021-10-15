@@ -3,6 +3,42 @@ const bcrypt =  require('bcrypt');
 const jwtoken =  require('jsonwebtoken');
 const script =  require('../js/script');
 
+exports.getuser = (req, res, next) => {
+    User.findOne({
+    email: req.params.id
+    }).then(
+        (user) => {
+            res.status(200).json(user);
+        }
+    ).catch(
+        (error) => {
+            res.status(400).json(
+                {
+                  message: error
+                });
+        }
+    );
+};
+exports.deleteuser = (req, res, next) => {
+    User.findOne({email: req.params.id}).then(
+            (user) => {
+                User.deleteOne({email: req.params.id}).then(
+                  () => {
+                    res.status(200).json({
+                      message: 'User Deleted!'
+                    });
+                  }
+                ).catch(
+                  (error) => {
+                    res.status(400).json({
+                      message: error
+                    });
+                  }
+                );
+            
+            }
+          );
+      };
 exports.signup = (req, res, next) => {
     const value = script.checkPassword(req.body.password);
     if(value.conditional == true){
@@ -10,6 +46,9 @@ exports.signup = (req, res, next) => {
             (hash) => {
                 const user = new User({
                     email: req.body.email,
+                    lastname: req.body.lastname,
+                    firstname: req.body.firstname,
+                    phonenumber: req.body.phonenumber,
                     password: hash,
                 });
                 user.save().then(
@@ -21,7 +60,7 @@ exports.signup = (req, res, next) => {
                 ).catch(
                     (error) => {
                         res.status(500).json({
-                            message: "Email is registered"
+                            message: new Error("Email is registered")
                         })
                     }
                 )
@@ -35,29 +74,25 @@ exports.signup = (req, res, next) => {
     
     }
 exports.login = (req, res, next) => {
-    const fs = require('fs');
-fs.unlink('../assets/mayo.jpeg', () => {
-    console.log("ELIMINADO")
-});
     User.findOne({email: req.body.email}).then(
         (user)=> {
         if(!user){
             return res.status(401).json({
-            error : new Error('User not found')
+                message: 'User not found'
             });
         }
         bcrypt.compare(req.body.password, user.password).then(
             (valid) => {
                 if(!valid){
                     return res.status(401).json({
-                        error: new Error('Incorrect Password')
+                        message: 'Incorrect Password'
                     });
                 }
                 const token = jwtoken.sign(
                     {userId: user._id},
                     'RANDOM_TOKEN_SECRET',
                     { expiresIn: '24H'});
-                res.status(201).json({
+                    res.status(201).json({
                     userId: user._id,
                     token: token
                 });
@@ -65,7 +100,7 @@ fs.unlink('../assets/mayo.jpeg', () => {
         ).catch(
             (error) => {
                 res.status(500).json({
-                    error: "error"
+                    message: "error"
                 });
             }
         );

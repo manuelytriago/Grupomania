@@ -13,6 +13,17 @@
       <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="username">
       <label for="floatingInput">Email address</label>
     </div>
+     <div class="form-floating">
+      <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="firstname">
+      <label for="floatingInput">First Name</label>
+    </div>
+     <div class="form-floating">
+      <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="lastname">
+      <label for="floatingInput">Last Name</label>
+    </div>
+    <div class="form-floating">
+      <VuePhoneNumberInput v-model="phone" />
+    </div>
     <div class="form-floating">
       <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="password">
       <label for="floatingPassword">Password</label>
@@ -41,14 +52,19 @@
 </template>
 
 <script>
-//import axios from "axios";
 
+import VuePhoneNumberInput from 'vue-phone-number-input';
+//import axios from "axios";
 export default {
+  components: { VuePhoneNumberInput },
   name: 'SaveUser',
    data() {
     return {
       username: "",
       password: "",
+      firstname:"",
+      lastname:"",
+      phone:"",
       password_confirmation: "",
       answer:""
     };
@@ -75,17 +91,19 @@ export default {
         let data1 = {
           email : this.username,
           password : this.password,
+          firstname : this.firstname,
+          lastname : this.lastname,
+          phonenumber : this.phone,
         }
           
         this.$http.post(url, data1)
           .then(response => {
-            console.log(response);
-                     this.$router.push('/dashboard')
-                     answer.innerHTML = response.data.message;
+            answer.innerHTML = response.data.message;
+            this.SignInUser(data1);
             
           })
           .catch(error => {
-            if(!error.response.data.message)
+            if(!error)
             answer.innerHTML = error.response.data.message;
           });
       } 
@@ -96,7 +114,37 @@ export default {
         answer.innerHTML = "Passwords do not match";
       }
     
-    }
+    },
+    SignInUser(data1) {
+        let url = "http://localhost:3000/api/auth/login"
+        let data2 = {
+          email : data1.email,
+          password : data1.password,
+        }
+        console.log(data2);
+        this.$http.post(url, data2)
+        .then(response => {
+          const user2 = JSON.parse(response.config.data);
+          console.log(response.data.token);
+           // localStorage.setItem('user', JSON.stringify(response.data.user2))
+            localStorage.setItem('jwt',response.data.token)
+            localStorage.setItem('user',user2.email)
+
+          console.log("entre");
+            if (localStorage.getItem('jwt') != null) {
+              this.$router.push('/dashboard')
+               console.log("JWT NOT NULL");
+              if (this.$route.params.nextUrl != null) {
+                this.$router.push(this.$route.params.nextUrl)
+                 console.log("PARAMS NOT NULL");
+              }
+            }
+          })
+          .catch(error => {
+            console.error(error);
+          });
+    
+    },
   }
 }
 </script>

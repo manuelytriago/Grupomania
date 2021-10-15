@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <div class="register">
     <SignUp msg="Welcome to Your Grupomania Network"/>
   </div>
 </template>

@@ -77,5 +77,5 @@ let exitsUser = function(usersArray,userId) {
 module.exports = {
     checkPassword,
     modifyArray,
-    exitsUser
+    exitsUser,
 }
