@@ -57,7 +57,7 @@ export default {
   },
   methods: {
       SignUpUser() { 
-               this.$router.push('/signup')
+        this.$router.push('/signup')
       },
     SignInUser(e) {
       e.preventDefault()

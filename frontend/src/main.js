@@ -5,7 +5,9 @@ import axios from "axios";
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import store from "./auth/store";
 // Import Bootstrap an BootstrapVue CSS files (order is important)
+import 'bootstrap/dist/js/bootstrap.bundle'
 import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 // Import the Auth0 configuration and plugin
 //import { domain, clientId } from "../auth_config.json";

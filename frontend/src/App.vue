@@ -1,15 +1,50 @@
 <template>
-  <div id="app">
+
+<div id="app">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+      <img src="./assets/icon.png" alt="" width="72" height="72">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#">Grupomania</a>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <div class="navbar-nav ms-auto me-3 mb-2 mb-lg-0">
+          <li class="nav-item">
+            <router-link @click="logout()" class="nav-link" v-if="!isdashboardPage()" to="/">Log out </router-link> 
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" v-if="!isauth()" to="/"> Sign In </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" v-if="!isauth()" to="/signup"> Sign Up </router-link> 
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" v-if="!isdashboardPage()" to="/profile"> Profile </router-link> 
+          </li>
+        </div>
+        <!--<form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>-->
+      </div>
+    </div>
+  </nav>
+  <router-view/>
+
+
+  <!-- <div id="app">
     <div id="nav">
       <router-link v-if="!isdashboardPage()" to="/">Log Out | </router-link> 
       <router-link v-if="!isauth()" to="/"> Sign In |</router-link>
       <router-link v-if="!isauth()" to="/signup"> Sign Up |</router-link> 
       <router-link v-if="!isdashboardPage()" to="/profile"> Profile </router-link> 
     </div>
-    <router-view/>
-  </div>
+    <router-view/>-->
+  </div> 
 </template>
-
 <script>
 
 
@@ -30,17 +65,17 @@
         }else{
           return false;
         }
-      }
+      },
     /*logout() {
       this.$store.dispatch(AUTH_LOGOUT)
       .then(() => {
         this.$router.push('/login')
       })
-    },
+    },*/
      logout() {
         
         window.onbeforeunload = function (){
-          Storage.clear();
+          
         localStorage.clear();
         localStorage.removeItem('vuex');
         localStorage.removeItem('jwt');
@@ -52,9 +87,9 @@
         this.$router.push('/');
       },
        beforeDestroy() {
-          Storage.clear();
+         
       localStorage.clear();
-   }*/
+   }
     },
   };
 </script>
