@@ -3,13 +3,13 @@
 <div id="app">
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">
-      <img src="./assets/icon.png" alt="" width="72" height="72">
+      <a class="navbar-brand me-0" href="#">
+      <img src="./assets/images/icon.png" alt="" width="72" height="72">
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <a class="navbar-brand" href="#">Grupomania</a>
+      <a class="navbar-brand me-0" href="#">Grupomania</a>
       <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <div class="navbar-nav ms-auto me-3 mb-2 mb-lg-0">
           <li class="nav-item">
@@ -73,23 +73,17 @@
       })
     },*/
      logout() {
-        
-        window.onbeforeunload = function (){
-          
+       try {
+         
+       } catch (error) {
+         
+       }
         localStorage.clear();
-        localStorage.removeItem('vuex');
-        localStorage.removeItem('jwt');
-        localStorage.removeItem('user');
-        localStorage.clear();
-        }
         localStorage.setItem('jwt',"")
         localStorage.setItem('user',"")
         this.$router.push('/');
+        
       },
-       beforeDestroy() {
-         
-      localStorage.clear();
-   }
     },
   };
 </script>

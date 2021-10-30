@@ -3,7 +3,7 @@
     <h1>{{ msg }}</h1>
    
 <main class="form-signin">
-  <img class="mb-4" src="../assets/icon.png" alt="" width="72" height="72">
+  <img class="mb-4" src="../assets/images/icon.png" alt="" width="72" height="72">
     
   <form>
     
@@ -29,7 +29,7 @@
     </div>
 
      <div class="checkbox mb-3">
-    <button class="w-100 btn btn-lg btn-primary" type="submit" @click="SignUpUser">Sign Up</button>
+    <button class="w-100 btn btn-lg btn-primary" type="submit"  @click="SignUpUser">Sign Up</button>
     
     </div>
     <p class="mt-5 mb-3 alert-danger" id="response" ></p>
@@ -56,23 +56,25 @@ export default {
     msg: String
   },
   methods: {
-      SignUpUser() { 
+      SignUpUser(event) { 
+      event.preventDefault()
         this.$router.push('/signup')
       },
-    SignInUser(e) {
-      e.preventDefault()
-
+      SignInUser(event) {
+      event.preventDefault()
+      
+          
         let url = "http://localhost:3000/api/auth/login"
         let data1 = {
           email : this.username,
           password : this.password,
         }
          let answer = document.getElementById("response");
-        
+       /* answer.innerHTML = "HELLO CLICK ITS WORKING";*/
         this.$http.post(url, data1)
         .then(response => {
           const user = JSON.parse(response.config.data);
-          console.log(response.data.token);
+          console.log(response.data);
            // localStorage.setItem('user', JSON.stringify(response.data.user))
             localStorage.setItem('jwt',response.data.token)
             localStorage.setItem('user',user.email)

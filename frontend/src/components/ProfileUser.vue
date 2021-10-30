@@ -3,7 +3,7 @@
     <h1>{{ msg }}</h1>
    
 <main class="form-user">
-  <img class="mb-4" src="../assets/icon.png" alt="" width="72" height="72">
+  <img class="mb-4" src="../assets/images/icon.png" alt="" width="72" height="72">
     
   <form class="row g-6">
   <div class="col-md-6">
