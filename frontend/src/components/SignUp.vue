@@ -5,7 +5,7 @@
 <main class="form-signin">
   
   <form>
-    <img class="mb-4" src="../assets/icon.png" alt="" width="72" height="72">
+    <img class="mb-4" src="../assets/images/icon.png" alt="" width="72" height="72">
     
     <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
@@ -14,11 +14,11 @@
       <label for="floatingInput">Email address</label>
     </div>
      <div class="form-floating">
-      <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="firstname">
+      <input type="text" class="form-control text-uppercase" id="floatingInput" placeholder="name@example.com" v-model="firstname">
       <label for="floatingInput">First Name</label>
     </div>
      <div class="form-floating">
-      <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="lastname">
+      <input type="text" class="form-control text-uppercase" id="floatingInput" placeholder="name@example.com" v-model="lastname">
       <label for="floatingInput">Last Name</label>
     </div>
     <div class="form-floating">
@@ -39,7 +39,7 @@
       </label>
     </div>
      <div class="checkbox mb-3">
-    <button class="w-100 btn btn-lg btn-primary" type="submit" @click="SignUpUser">Sign Up</button>
+    <button class="w-100 btn btn-lg btn-primary" type="submit" v-on:@click="SignUpUser">Sign Up</button>
     
     </div>
 

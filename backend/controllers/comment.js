@@ -4,28 +4,38 @@ const fs = require('fs');
 const script =  require('../js/script');
 /*Birthdate DATE  
 MASKED WITH (FUNCTION = 'default()') NOT NULL*/
-let arraylikes = [];
-let arrayDisliked = [];
+let arrayImages = [];
+let arrayVideos = [];
 exports.createComment = (req, res, next) => {
     const url = req.protocol+'://'+req.get('host');
-    req.body.comment = JSON.parse(req.body.comment)
-    const comment = new Comment({
-        name: req.body.comment.name,
-        manufacturer: req.body.comment.manufacturer,
+    //arrayImages += ['/../../assets/images/'+req.body.imageUrl];
+    //req.body.comment = JSON.parse(req.body.comment)
+    //req.body.file = JSON.parse(req.body.file)
+    console.log("req.file");
+    console.log(req);
+    console.log("file");
+    console.log(req.file);
+
+    /*const comment = new Comment({
+        userId: req.body.comment.userId,
+        comment: req.body.comment.comment,
+        date: new Date(),
+        imageUrl: arrayImages,
+        videoUrl: arrayImages,
+        /*
         description: req.body.comment.description,
-        imageUrl: '/../../assets/'+req.file.filename,
-        mainPepper: req.body.comment.mainPepper,
         heat: req.body.comment.heat,
         userId: req.body.comment.userId,
         likes: 0,
         dislikes: 0,
         usersLiked:arraylikes,
         usersDisliked:arrayDisliked
-    });
+        */
+    /*});
     comment.save().then(
         () => {
             res.status(201).json({
-                message: 'Sauce saved successfully'
+                message: 'comment posted successfully'
             })
         }
         ).catch((error) => {
@@ -33,8 +43,9 @@ exports.createComment = (req, res, next) => {
           message: error
         });
         }
-        );
+        );*/
     }
+
 exports.getOneComment = (req, res, next) => {
   Comment.findOne({
             _id: req.params.id

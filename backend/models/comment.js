@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const commentSchema = mongoose.Schema({
 userId:{type: String, required: true},
 comment:{type: String, required: true},
-imageUrl:{type: String, required: true}
+date:{type: Date, required: true},
+imageUrl:{type: [String], required: false},
+videUrl:{type: [String], required: false}
 });
 //commentSchema.plugin(uniqueValidator);
 
