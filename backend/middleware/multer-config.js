@@ -8,15 +8,7 @@ const MIME_TYPES = {
 };
 
 const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    const extension = MIME_TYPES[file.mimetype];
-    if(extension === 'jpg' || extension === 'jpeg' ||extension === 'png'){
-      callback(null, '../frontend');
-    }
-    if(extension === 'mp4'){
-      callback(null, '../frontend');
-    }
-  },
+  destination:'../assets',
   filename: (req, file, callback) => {
     const name = file.originalname.split(' ').join('_');
     const extension = MIME_TYPES[file.mimetype];
@@ -24,4 +16,4 @@ const storage = multer.diskStorage({
   }
 });
 
-module.exports = multer({storage: storage}).single('image');
+module.exports = multer({storage: storage}).single('files');

@@ -4,32 +4,32 @@
    
 <main class="form-signin">
   
-  <form>
+  <form @submit.prevent="submit">
     <img class="mb-4" src="../assets/images/icon.png" alt="" width="72" height="72">
     
     <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
     <div class="form-floating">
-      <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="username">
+      <input for="validationDefaultUsername" type="email" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="formdata.username" required>
       <label for="floatingInput">Email address</label>
     </div>
      <div class="form-floating">
-      <input type="text" class="form-control text-uppercase" id="floatingInput" placeholder="name@example.com" v-model="firstname">
+      <input type="text" class="form-control text-uppercase" id="floatingInput" placeholder="name@example.com" v-model="formdata.firstname" required>
       <label for="floatingInput">First Name</label>
     </div>
      <div class="form-floating">
-      <input type="text" class="form-control text-uppercase" id="floatingInput" placeholder="name@example.com" v-model="lastname">
+      <input type="text" class="form-control text-uppercase" id="floatingInput" placeholder="name@example.com" v-model="formdata.lastname" required>
       <label for="floatingInput">Last Name</label>
     </div>
     <div class="form-floating">
-      <VuePhoneNumberInput v-model="phone" />
+      <VuePhoneNumberInput v-model="formdata.phone" required/>
     </div>
     <div class="form-floating">
-      <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="password">
+      <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="formdata.password" required>
       <label for="floatingPassword">Password</label>
     </div>
     <div class="form-floating">
-      <input type="password" class="form-control" id="floatingPassword2" placeholder="password confirmation" v-model="password_confirmation">
+      <input type="password" class="form-control" id="floatingPassword2" placeholder="password confirmation" v-model="formdata.password_confirmation" required>
       <label for="floatingPassword2">Password Confirmation</label>
     </div>
 
@@ -39,11 +39,10 @@
       </label>
     </div>
      <div class="checkbox mb-3">
-    <button class="w-100 btn btn-lg btn-primary" type="submit" v-on:@click="SignUpUser">Sign Up</button>
-    
+    <button class="w-100 btn btn-lg btn-primary" type="submit" >Sign Up</button>
     </div>
 
-    <p class="mt-5 mb-3 alert-danger" id="answer"></p>
+    <p class="mt-5 mb-3 alert-danger" id="answer">{{user}}</p>
     <p class="mt-5 mb-3 text-muted">&copy; 2020–2021</p>
   </form>
 </main>
@@ -54,97 +53,78 @@
 <script>
 
 import VuePhoneNumberInput from 'vue-phone-number-input';
+import { mapState } from "vuex";
 //import axios from "axios";
 export default {
   components: { VuePhoneNumberInput },
   name: 'SaveUser',
    data() {
     return {
+    formdata:{
       username: "",
       password: "",
       firstname:"",
       lastname:"",
       phone:"",
       password_confirmation: "",
-      answer:""
+    },
+     answer:""
     };
   },
   props: {
     msg: String
   },
+   computed: {
+    ...mapState({
+      user: (state) => state.user
+    })
+  },
   methods: {
-    SignUpUser(e) {
-      e.preventDefault()
+    submit(){  
     let answer = document.getElementById("answer");
-      if (this.password === "" && this.password_confirmation === "" && this.username ==="") {
-        this.password = ""
-        this.password_confirmation = ""
+      if (this.formdata.password === "" && this.formdata.password_confirmation === "" && this.formdata.username ==="") {
+        this.formdata.password = ""
+        this.formdata.password_confirmation = ""
         answer.innerHTML = "Please enter email and Passwords";
       
       }
-      else if (this.password === "" && this.password_confirmation === "" && this.username !="") {
-      
+      else if (this.formdata.password === "" && this.formdata.password_confirmation === "" && this.formdata.username !="") {
         answer.innerHTML = "Please enter passwords";
       }
-      else if (this.password === this.password_confirmation && this.password.length > 0) {
+      else if (this.formdata.password === this.formdata.password_confirmation && this.formdata.password.length > 0) {
         let url = "http://localhost:3000/api/auth/signup";
         let data1 = {
-          email : this.username,
-          password : this.password,
-          firstname : this.firstname,
-          lastname : this.lastname,
-          phonenumber : this.phone,
+          email : this.formdata.username,
+          password : this.formdata.password,
+          firstname :this.formdata.firstname.toUpperCase(),
+          lastname : this.formdata.lastname,
+          phonenumber : this.formdata.phone,
         }
           
         this.$http.post(url, data1)
           .then(response => {
-            answer.innerHTML = response.data.message;
-            this.SignInUser(data1);
+            answer.innerHTML = response.data;
+            this.$store.commit('login',response); 
+             console.log("response in component",response);
+             if(response.status === 201 ){
+
+             this.$router.push('/dashboard')
+             }
             
           })
           .catch(error => {
-            if(!error)
+            console.log(error.response.data.message)
             answer.innerHTML = error.response.data.message;
           });
       } 
       
       else {
-        this.password = ""
-        this.password_confirmation = ""
+        this.formdata.password = ""
+        this.formdata.password_confirmation = ""
         answer.innerHTML = "Passwords do not match";
       }
     
-    },
-    SignInUser(data1) {
-        let url = "http://localhost:3000/api/auth/login"
-        let data2 = {
-          email : data1.email,
-          password : data1.password,
-        }
-        console.log(data2);
-        this.$http.post(url, data2)
-        .then(response => {
-          const user2 = JSON.parse(response.config.data);
-          console.log(response.data.token);
-           // localStorage.setItem('user', JSON.stringify(response.data.user2))
-            localStorage.setItem('jwt',response.data.token)
-            localStorage.setItem('user',user2.email)
-
-          console.log("entre");
-            if (localStorage.getItem('jwt') != null) {
-              this.$router.push('/dashboard')
-               console.log("JWT NOT NULL");
-              if (this.$route.params.nextUrl != null) {
-                this.$router.push(this.$route.params.nextUrl)
-                 console.log("PARAMS NOT NULL");
-              }
-            }
-          })
-          .catch(error => {
-            console.error(error);
-          });
-    
-    },
+    }
   }
 }
 </script>

@@ -5,7 +5,7 @@
 <main class="form-user">
   <img class="mb-4" src="../assets/images/icon.png" alt="" width="72" height="72">
     
-  <form class="row g-6">
+  <form class="row g-6" @submit.prevent="submit">
   <div class="col-md-6">
     <label for="validationDefault01" class="form-label">First name</label>
     <input type="text" class="form-control" id="validationDefault01" v-model="firstname" required>
@@ -33,7 +33,7 @@
     </div>
   </div>
   <div class="col-12">
-    <button class="w-100 btn btn-lg btn-primary" type="submit" @click="DeleteUser">Delete</button>
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Delete</button>
   </div>
 </form>
     <p class="mt-5 mb-3 alert-danger" id="answer"></p>
@@ -45,9 +45,8 @@
 </template>
 
 <script>
-
-
 import VuePhoneNumberInput from 'vue-phone-number-input';
+import { mapState } from "vuex";
 //import axios from "axios";
 export default {
    components: { VuePhoneNumberInput },
@@ -64,9 +63,16 @@ export default {
   props: {
     msg: String
   },
+   computed: {
+    ...mapState({
+      user: (state) => state.user
+    })
+  },
   methods: {
     GetUser(){
-        const user = localStorage.getItem('user');
+       console.log("this.user");
+        console.log(this.user.user);
+        const user = this.user.user;
         let url = "http://localhost:3000/api/auth/user/"+user;  
         this.$http.get(url)
         .then(response => {
@@ -81,15 +87,13 @@ export default {
           });
     },
 
-    DeleteUser(e) {
+    submit(e) {
       e.preventDefault()
-      localStorage.getItem('user');
-      console.log(localStorage.getItem('user'));
-      let url = "http://localhost:3000/api/auth/deleteuser/"+this.username;
+      const user = this.user.user;
+      let url = "http://localhost:3000/api/auth/deleteuser/"+user;
       let answer = document.getElementById("answer");
        this.$http.delete(url)
           .then(response => {
-            
             console.log(response);
                      this.$router.push('/')
                      answer.innerHTML = response.data.message;

@@ -6,6 +6,8 @@ import Comment from '../views/Comment.vue'
 //import store from "../auth/store"
 import SignIn from "../views/SignIn"
 import Profile from "../views/Profile"
+
+import store from "../auth/store"
 //import createRouter from "vue-router"
 //import createWebHistory from "vue-router"
 //import { authenticationGuard } from '@/auth/authenticationGuard';
@@ -61,6 +63,15 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "signup" */ '../views/Register.vue')
   
+  },
+  {
+    path: '/replies',
+    name: 'Replies',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "signup" */ '../views/RepliesPosts.vue')
+  
   }
 ]
 
@@ -73,7 +84,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const publicPages = ['/', '/signup' , '/profile'];
   const authRequired = !publicPages.includes(to.path);
-  const loggedIn = localStorage.getItem('user');
+  const loggedIn = store.getters.getUser;
 
   // trying to access a restricted page + not logged in
   // redirect to login page

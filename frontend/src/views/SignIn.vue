@@ -2,6 +2,7 @@
   <div class="home">
     <!-- <img alt="Vue logo" src="../assets/icon.png">-->
     <LogIn msg="Welcome to Your Grupomania Network"/>
+  
   </div>
 </template>
 

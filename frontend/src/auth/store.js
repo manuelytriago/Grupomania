@@ -1,41 +1,44 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    status: '',
-    token: localStorage.getItem('jwt') || '',
-    user : {}
+    user: {
+      status: '',
+      token: '',
+      user : '',
+      id: '',
+      idComment: '',
+    },
+    
   },
   mutations: {
+    login(state, user){
+      state.user.token = user.data.token; 
+      state.user.user = user.data.userId;
+      state.user.id = user.data.id;
 
+    },
+    comment(state,comment){
+      state.user.idComment= comment;
+    },
+    clear (state) {
+      state.user.user = "";
+      state.user.token = "";
+      state.user.id = "";
+      state.user.idComment= "";
+    }
   },
   actions: {
-    login({commit}, user){
-      return new Promise((resolve, reject) => {
-        commit('auth_request')
-        axios({url: 'http://localhost:3000/api/auth/login', data: user, method: 'POST' })
-        .then(resp => {
-          const token = resp.data.token
-          const user = resp.data.user
-          localStorage.setItem('token', token)
-          axios.defaults.headers.common['Authorization'] = token
-          commit('auth_success', token, user)
-          resolve(resp)
-        })
-        .catch(err => {
-          commit('auth_error')
-          localStorage.removeItem('token')
-          reject(err)
-        })
-      })
-  },
-
+   
+     
   },
   getters : {
+    getUser (state) {
+      return state.user.user;
+    }
 
   }
 })

@@ -14,7 +14,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 //import { Auth0Plugin } from '@/auth/auth0-plugin';
 import VuePhoneNumberInput from 'vue-phone-number-input';
 import 'vue-phone-number-input/dist/vue-phone-number-input.css';
-
+import Vuelidate from 'vuelidate';
 const base = axios.create({
   baseURL: "http://localhost:3000/api"
 });
@@ -23,6 +23,8 @@ Vue.component('vue-phone-number-input', VuePhoneNumberInput);
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
+
+Vue.use(Vuelidate)
 /*Vue.use(Auth0Plugin, {
   domain,
   clientId,
@@ -36,10 +38,6 @@ Vue.use(IconsPlugin)
 });*/
 Vue.prototype.$http = base;
 Vue.config.productionTip = false
-const token = localStorage.getItem('user-token')
-if (token) {
-  axios.defaults.headers.common['Authorization'] = token
-}
 new Vue({
   router,
   store,

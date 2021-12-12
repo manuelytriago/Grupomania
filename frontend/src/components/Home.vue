@@ -10,8 +10,7 @@
         </a>
       </div>
       <div id="comment" class="border border-primary col-6 col-sm-8 ps-0 pe-0 col-lg-8 col-xl-8 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 ">
-        <input type="text" class=" form-control text-uppercase w-100 h-100" id="comment1" placeholder="write your post" v-model="comment">
-      
+        <input type="text" class=" form-control w-100 h-100" id="comment1" placeholder="WRITE YOUR POST" v-model="comment" required>
       </div>
        <div id="post" @click="post"  class="d-flex align-items-center justify-content-center border border-primary col-2 col-sm-1 col-lg-1 col-xl-1 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 "> 
          <div class="">
@@ -26,67 +25,42 @@
            <a class="navbar-brand me-0 pt-0 pb-0 w-100 h-100" href="#" @click="onUploadFile">
             <img src="../assets/images/clip.svg" class="img-fluid" alt="" width="25" height="25">
           </a>
-          <input type="file"  style="display: none" id="filelem" ref="fileInput" accept="image/*, video/*" @change="onFilePicked"/>
+          <input type="file" name="files" style="display: none" id="files" ref="fileInput" accept="image/*, video/*" @change="onFilePicked"/>
          </div>
         
       </div>
       <div id="uploaded" class="border border-primary col-12 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 "> 
-        <div class="border border-primary col-12">
-          <img id="imageUploaded" src="" class="img-fluid" alt="">
-        </div>
-        <div id="videoUploaded" class="border border-primary col-12 w">
-           <!--video class="img-fluid" controls>
-              <source id="videoUploaded" src=""  type="video/mp4">
-            </video> -->
+        <div id="imageUploaded" class="border border-primary col-12 w">
+          
         </div>
       </div>
     </div>
-
-    <div id="posts" class="border me-5 ms-5 row">
-      <div id="posts1" class="border border-primary col-12 mt-sm-3 mb-sm-3 mt-2 mb-2">
-        <div id="posts_information" class=" border border-primary col-12 mt-sm-3">
-           <p class="border border-primary text-start mb-0">
-            Post made by Manuel Ytriago on October 15 at 6:22pm 5 hours ago
-          </p>
+         <div v-if="posts_shared" id="posts" class="border me-5 ms-5 col margin_half" >
+      <div @mouseover="addPost(user.id,postsdata.idComment)" v-for="postsdata in posts_shared" :key="postsdata.idComment" :id="'posts'+postsdata.idComment" class="border border-primary col-12 mt-sm-3 mb-sm-3 mt-2 mb-2 me-xl-0 ms-xl-0">
+        {{postsdata.user_tag}}
+        <div v-if="postsdata.user_tag == true" class="border border-primary col-12 me-xl-0 ms-xl-0 background_read">    
+            <All v-if="postsdata.user_tag == true" :posts_shared="posts"
+            
+            />
+            <All v-else :posts_shared="posts"/>
         </div>
-        <div id="comments" class="border border-primary col-12 mt-sm-3">
-          <div id="comments" class="border border-primary col-12">
-            <p class="text-start ">
-              Hello this is my first comment I am going to try to do this as awesomw as my plan of life
-              that is become in the most incredible developer in the world
-            </p>  
-          </div>
-        </div>
-        <div id="postsmultimedia" class="border border-primary col-12 w">
-           <video class="img-fluid" controls>
-              <source src="../assets/videos/video.mp4" type="video/mp4">
-            </video> 
-        </div>
-        <div id="postsimages" class="border border-primary col-12">
-          <img src="../assets/images/icon.png" class="img-fluid" alt="">
-        </div>
-
-        <div id="post_actions" class="col-12 d-flex mt-2 mb-2 me-2 ms-2">
-           <a href="#" class="me-sm-3 ms-sm-3 me-2 ms-2">
-            Comments
-          </a>
-          <a href="#">
-            Share
-          </a>
-        </div>
-        
-      </div>
-      
+      </div> 
     </div>
-
-  </div>
+      </div> 
 </template>
 
 <script>
+
+//import { store } from "../auth/store.js";
+import { mapState } from "vuex";
+import All from  '@/components/Posts.vue'
 //import axios from "axios";
 
 export default {
-  name: 'SaveUser',
+  name: 'Dashboard',
+  component:{
+    All
+  },
    data() {
     return {
       username: "",
@@ -94,138 +68,252 @@ export default {
       comment:"",
       image: null,
       video: null,
-      savedimage: null,
-      savedvideo: null
+      multimedia: null,
+      posts: null,
+      replyresponse:null,
+      user_tag:null,
+      replytext: []
     };
   },
   props: {
     msg: String
   },
+   computed: {
+    ...mapState({
+      user: (state) => state.user
+    })
+  },
+    mounted(){
+     // invocar los métodos
+     this.dataPosts();
+    },
+
   methods: {
-    
-    post () {    
-     if(this.comment == ""){
-       alert('you cant comment something empty');
+    commentcount(id){
+      var cont = 0;
 
-     }
-     /*if(image != ""){
-       alert('you cant comment something empty');
-     }
-     if(video != ""){
-       alert('you cant comment something empty');
-     }*/
-      
-        
-        let url = "/comment"
-        let data1 = {
-          userId: localStorage.getItem('user'),
-          comment: this.comment,
-        }
-       let headers = {
-            Accept: 'application/json',
-            'Content-Type': 'multipart/form-data;boundary=${data._boundary}',
-            Authorization: 'Bearer '+localStorage.getItem('jwt')
+      var replys = this.replyresponse;
+      if (replys != null){
+        for (var i = 0 ; i < replys.length; i++ ){
+          if (replys[i].idComment == id){
+            cont++
           }
-          console.log(this.image)
-       let formdata = new FormData();
-       formdata.append('file', this.image);
-       console.log("FORMDATA"+formdata)
-       for (var pair of formdata.entries()) {
-        console.log(pair[0]+ ', ' + pair[1]); 
-        } 
 
-       
-        this.$http.post(url,data1,formdata,headers)
-          .then(response => {
-            console.log(response)
+        }
+        return cont;
+      }else{
+        return cont;
+      }
+    },
+    commentdate(datecomment){
+
+      //var date = new Date(Date.parse(datecomment));
+      //var date = datecomment.split('T',1);
+       var date = datecomment.split('.',1);
+       //var time = date.split('T',1);
+      //var time = datecomment.split('T',2);
+
+      console.log("NEW DATE");
+      console.log(date);
+
+      var date1 = new Date(date);
+     var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    var datestring = date1.toLocaleDateString('en-US', options)+ " " +
+    date1.getHours() + ":" + (date1.getMinutes()<10?'0':'') + date1.getMinutes();
+      
+      return datestring;
+      },
+    dataPosts(){
+    
+      let url = "/comment/"+this.user.id;
+        
+        this.$http.get(url).then(response => {
+          this.posts = JSON.parse(JSON.stringify(response.data.comments));
+          this.replyresponse = JSON.parse(JSON.stringify(response.data.reply));
+          this.user_tag = JSON.parse(JSON.stringify(response.data.user));
+          console.log("response in component",response.data);
           })
           .catch(error => {
             console.error(error);
           });
+    },
+    addPost (user, post){
+      let url = "/auth/add";
+        let data1 = {
+          userId: user,
+          postiD: post,
+        }
+         this.$http.post(url,data1).then(response => {
+          this.clear()
+          console.log("response in component",response);
+          })
+          .catch(error => {
+            console.error("error");
+            console.error(error);
+          });
+    },
+    post () {    
+      console.log("this.multimedia")
+      console.log(this.multimedia)
+     const comment = document.getElementById('comment1').value;
+     if(comment != ''){
+        let url = "/comment";
+        let data1 = {
+          userId: this.user.id,
+          comment: this.comment,
+        }
+        const formData = new FormData();
+        //Take the first selected file
+        const fileField = document.querySelector('input[type="file"]')
+        formData.append("files", fileField.files[0])
+        formData.append("body", JSON.stringify(data1));
+        this.$http.post(url,formData).then(response => {
+          this.clear()
+          console.log("response in component",response);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+     }else{
+       document.getElementById('comment1').placeholder = "Please write something down to post"
        
+     }
+    },
+  
+    show (idComment) {
+      var display = document.getElementById('show'+idComment);
 
+    if(display.classList.contains('d-none')){
+      console.log("entre block")
+      display.classList.remove('d-none');
+      display.classList.add('d-block');
+    }else{
+  
+      display.classList.remove('d-block');
+      display.classList.add('d-none');
+    }
+    
+    },
+    reply (idComment) {    
+      console.log("this.multimedia")
+      console.log(this.multimedia)
+     const comment = document.getElementById(idComment).value;
+     if(comment != ''){
+        let url = "/Reply";
+        let data1 = {
+          id: this.user.id,
+          idComment: idComment,
+          reply: this.replytext[idComment]
+        }
+        const formData = new FormData();
+        formData.append("body", JSON.stringify(data1));
+        this.$http.post(url,formData).then(response => {
+          this.clear()
+          console.log("response in component",response);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+     }else{
+       document.getElementById(idComment).placeholder = "Please write something down to post"
+       
+     }
     },
     onUploadFile () {
       this.$refs.fileInput.click()
     },
     onFilePicked (event) {
+      let images = document.getElementById("imageUploaded");
       this.image =  this.$refs.fileInput.files[0];
       const files = event.target.files
       //let filename = files[0].name
+      
       const fileReader = new FileReader()
       fileReader.addEventListener('load', () => {
 
         this.imageUrl = fileReader.result;
 
-         if(files[0].type === 'image/png' || files[0].type === 'image/jpg' || files[0].type === 'image/jpeg'){
-        let images = document.getElementById("imageUploaded");
-        /*console.log('imagesss')
-        console.log(files);
-        console.log(this.imageUrl);*/
-         images.src = this.imageUrl;
-         //this.image = fileReader.result;
-         this.savedvideo = files; 
-         }
-         
-        if(files[0].type === 'video/mp4'){
-        console.log('videossss')
-        let videos = document.getElementById("videoUploaded");
+         if(files[0].type === 'video/mp4'){   
+            if (!document.getElementById("video") && !document.getElementById("image") ){
+                createVideo(this.imageUrl)
+                console.log('HAY VIDEO')
+            }else{
+                 if(document.getElementById("image") ){
+                const picture1 = document.getElementById('image');
+                images.removeChild(picture1);
+                }
+                if(document.getElementById("video") ){
+                const picture1 = document.getElementById('video');
+                images.removeChild(picture1);
+                }
+                 createVideo(this.imageUrl) 
+            }
+         }else{
+             if (!document.getElementById("video") &&  !document.getElementById("image") ){
+                createImage(this.imageUrl)
+             }else{
+               if(document.getElementById("image") ){
+                const picture1 = document.getElementById('image');
+                images.removeChild(picture1);
+                }
+                if(document.getElementById("video") ){
+                const picture1 = document.getElementById('video');
+                images.removeChild(picture1);
+                }
+                 createImage(this.imageUrl) 
+             }
+           
+          }
+            
+               
+      })
+
+      function createVideo(imageUrl){
         const div1 = document.createElement('video');
+        div1.id = "video"
         div1.controls = "controls";
         div1.className = "img-fluid"
-        videos.appendChild(div1);
+        images.appendChild(div1);
         const div2 = document.createElement('source');
         div2.ype ="video/mp4";
-        div2.src = this.imageUrl;
+        div2.src = imageUrl;
         div1.appendChild(div2);
-          console.log(files);
-        console.log(this.imageUrl);
-         videos.src = fileReader.result;
-         
-          this.video = fileReader.result;
-          //this.savedvideo = files[0]; 
-         }     
-      })
-      fileReader.readAsDataURL(files[0])
-      this.savedimage = files[0]; 
-    },
-    SignUpUser(e) {
-      e.preventDefault()
-
-      if (this.password === this.password_confirmation && this.password.length > 0) {
-        let url = "http://localhost:3000/signup"
-
-        this.$http.post(url, {
-          //name: this.name,
-          email: this.email,
-          password: this.password,
-          //is_admin: this.is_admin
-        })
-          .then(response => {
-            localStorage.setItem('user', JSON.stringify(response.data.user))
-            localStorage.setItem('jwt',response.data.token)
-
-            if (localStorage.getItem('jwt') != null) {
-              this.$emit('loggedIn')
-              if (this.$route.params.nextUrl != null) {
-                this.$router.push(this.$route.params.nextUrl)
-              } else {
-                this.$router.push('/')
-              }
-            }
-          })
-          .catch(error => {
-            console.error(error);
-          });
-      } else {
-        this.password = ""
-        this.passwordConfirm = ""
-
-        return alert("Passwords do not match")
       }
-    
+
+      function createImage(imageUrl){
+        const picture = document.createElement('img');
+              picture.id = "image";
+              picture.src = imageUrl;
+              picture.className = "img-fluid";
+              images.appendChild(picture);
+      }
+      
+      fileReader.readAsDataURL(files[0])
+      this.multimedia = files[0]; 
+        //Take the first selected file
+        
+    },
+    clear () {
+      let images = document.getElementById("imageUploaded");       
+      if (document.getElementById("video")){
+        const picture1 = document.getElementById('video');
+            images.removeChild(picture1);
+      }else{
+        if (document.getElementById("image")){
+          const picture1 = document.getElementById('image');
+            images.removeChild(picture1);
+        }
+        
+      }
+      this.username = "",
+      this.password = "",
+      this.comment = "",
+      this.image = null,
+      this.video = null,
+      this.multimedia = null,
+      this.replytext = ""
     }
-  }
+  },
 }
 </script>
 
@@ -259,6 +347,10 @@ body {
   background-color: #f5f5f5;
 }
 
+.margin_half {
+  margin-right: 25% !important;
+  margin-left: 25% !important;
+}
 .form-signin {
   width: 100%;
   max-width: 330px;
