@@ -17,8 +17,8 @@ export default new Vuex.Store({
   mutations: {
     login(state, user){
       state.user.token = user.data.token; 
-      state.user.user = user.data.userId;
-      state.user.id = user.data.id;
+      state.user.user = user.data.email;
+      state.user.id = user.data.userId;
 
     },
     comment(state,comment){

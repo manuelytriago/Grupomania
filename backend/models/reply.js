@@ -1,49 +1,50 @@
 
-/*const mongoose = require('mongoose');
-//const uniqueValidator = require('mongoose-unique-validator');
-const commentSchema = mongoose.Schema({
-userId:{type: String, required: true},
-comment:{type: String, required: true},
-date:{type: Date, required: true},
-imageUrl:{type: [String], required: false},
-videUrl:{type: [String], required: false}
-});
-//commentSchema.plugin(uniqueValidator);
 
-module.exports = mongoose.model('Comment', commentSchema);
-*/
+  // Include Sequelize module.
+  const Sequelize = require('sequelize')
 
-class User{
-    constructor(Id,idComment,idUser, Comment, Date, imageUrl){
-        this.idReply = Id
-        this.idComment = idComment
-        this.idUser = idUser
-        this.reply = Comment   
-        this.Date = Date   
-        this.imageUrl = imageUrl  
-    }
-}
-module.exports = User;
+  // Import sequelize object,
+  // Database connection pool managed by Sequelize.
+  const sequelize = require('../config/db.config2')
+  const Comment =  require('../models/comment');
+  // Define method takes two arguments
+  // 1st - name of table
+  // 2nd - columns inside the table
+  const Reply = sequelize.define('Replie', {
 
-/*
-module.exports = (sequelize, Sequelize) => {
-    const Comment = sequelize.define("Comment", {
-      userId: {
-        type: Number
+      // Column-1, user_id is an object with
+      // properties like type, keys,
+      // validation of column.
+      idReply:{/*Sequelize module has INTEGER Data_Type.*/ type:Sequelize.INTEGER,
+          /*To increment user_id automatically.*/autoIncrement:true,
+          /* user_id can not be null.*/allowNull:false,
+          /* For uniquely identify user.*/primaryKey:true
       },
-      comment: {
-        type: String
-      },
-      date: {
-        type: Date
-      },
-      imageUrl: {
-        type: [String]
-      },
-      videUrl: {
-        type: [String]
-      },
-    });
+      idCommentReply:{/*Sequelize module has INTEGER Data_Type.*/ type:Sequelize.INTEGER,
+        /* user_id can not be null.*/allowNull:false,
+        /* For uniquely identify user.*/primaryKey:true
+    },
+      idUser: {
+        type:Sequelize.INTEGER,
+        /* user_id can not be null.*/allowNull:false,
+        /* For uniquely identify user.*/primaryKey:true
+    },
+      // Column-2, reply
+      reply: { type: Sequelize.STRING, allowNull:false },
+      // Column-3, Image
+      image: { type: Sequelize.STRING, allowNull:false },
+      // Column-4 Createion date, default values for
+      // dates => current time
+      myDate: { type: Sequelize.DATE,
+              defaultValue: Sequelize.NOW },
+      // Timestamps
+      createdAt: Sequelize.DATE,
+      updatedAt: Sequelize.DATE,
+  })
   
-    return Comment;
-  };*/
+  Comment.hasMany(Reply, {foreignKey: 'idCommentReply', sourceKey: 'idComment'});
+  Reply.belongsTo(Comment, {foreignKey: 'idCommentReply', targetKey: 'idComment'});
+  // Exporting User, using this constant
+  // we can perform CRUD operations on
+  // 'user' table.
+  module.exports = Reply

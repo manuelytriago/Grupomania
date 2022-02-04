@@ -1,17 +1,16 @@
 <template>
   <div class="about">
-
-    <LogIn msg="Welcome to Your Grupomania Network"/>
+    <Comment msg="Welcome to Your Grupomania Network"/>
   </div>
 </template>
 <script>
 // @ is an alias to /src
-import LogIn from '@/components/Home.vue'
+import Comment from '@/components/Comment.vue'
 
 export default {
   name: 'Register',
   components: {
-    LogIn
+    Comment
   }
 }
 </script>

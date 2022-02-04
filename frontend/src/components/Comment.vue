@@ -35,15 +35,15 @@
         </div>
       </div>
     </div>
-         <div v-if="posts_shared" id="posts" class="border me-5 ms-5 col margin_half" >
-      <div @mouseover="addPost(user.id,postsdata.idComment)" v-for="postsdata in posts_shared" :key="postsdata.idComment" :id="'posts'+postsdata.idComment" class="border border-primary col-12 mt-sm-3 mb-sm-3 mt-2 mb-2 me-xl-0 ms-xl-0">
-        {{postsdata.user_tag}}
-        <div v-if="postsdata.user_tag == true" class="border border-primary col-12 me-xl-0 ms-xl-0 background_read">    
-            <All v-if="postsdata.user_tag == true" :posts_shared="posts"
-            
-            />
-            <All v-else :posts_shared="posts"/>
-        </div>
+      <div v-if="posts_shared" id="posts" class="border me-5 ms-5 col margin_half" >
+        <div @mouseover="addPost(user.id,postsdata.idComment)" v-for="postsdata in posts_shared" :key="postsdata.idComment" :id="'posts'+postsdata.idComment" class="border border-primary col-12 mt-sm-3 mb-sm-3 mt-2 mb-2 me-xl-0 ms-xl-0">
+          {{postsdata.user_tag}}
+          <div v-if="postsdata.user_tag == true" class="border border-primary col-12 me-xl-0 ms-xl-0 background_read">    
+              <All v-if="postsdata.user_tag == true" :posts_shared="posts"
+              
+              />
+              <All v-else :posts_shared="posts"/>
+          </div>
       </div> 
     </div>
       </div> 
@@ -85,7 +85,7 @@ export default {
   },
     mounted(){
      // invocar los métodos
-     this.dataPosts();
+    this.dataPosts();
     },
 
   methods: {
@@ -106,7 +106,7 @@ export default {
       }
     },
     commentdate(datecomment){
-
+      if(datecomment){
       //var date = new Date(Date.parse(datecomment));
       //var date = datecomment.split('T',1);
        var date = datecomment.split('.',1);
@@ -122,16 +122,20 @@ export default {
     date1.getHours() + ":" + (date1.getMinutes()<10?'0':'') + date1.getMinutes();
       
       return datestring;
+      }else{
+        return
+      }
       },
+
     dataPosts(){
     
       let url = "/comment/"+this.user.id;
         
-        this.$http.get(url).then(response => {
+        this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.posts = JSON.parse(JSON.stringify(response.data.comments));
           this.replyresponse = JSON.parse(JSON.stringify(response.data.reply));
           this.user_tag = JSON.parse(JSON.stringify(response.data.user));
-          console.log("response in component",response.data);
+          
           })
           .catch(error => {
             console.error(error);
@@ -140,10 +144,10 @@ export default {
     addPost (user, post){
       let url = "/auth/add";
         let data1 = {
-          userId: user,
+          userId: this.user.id,
           postiD: post,
         }
-         this.$http.post(url,data1).then(response => {
+         this.$http.post(url,data1,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.clear()
           console.log("response in component",response);
           })
@@ -153,8 +157,8 @@ export default {
           });
     },
     post () {    
-      console.log("this.multimedia")
-      console.log(this.multimedia)
+        console.log("user home")
+      console.log(this.user)
      const comment = document.getElementById('comment1').value;
      if(comment != ''){
         let url = "/comment";
@@ -167,7 +171,7 @@ export default {
         const fileField = document.querySelector('input[type="file"]')
         formData.append("files", fileField.files[0])
         formData.append("body", JSON.stringify(data1));
-        this.$http.post(url,formData).then(response => {
+        this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.clear()
           console.log("response in component",response);
           })
@@ -207,7 +211,7 @@ export default {
         }
         const formData = new FormData();
         formData.append("body", JSON.stringify(data1));
-        this.$http.post(url,formData).then(response => {
+        this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.user}}).then(response => {
           this.clear()
           console.log("response in component",response);
           })

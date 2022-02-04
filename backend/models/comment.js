@@ -1,49 +1,45 @@
 
-/*const mongoose = require('mongoose');
-//const uniqueValidator = require('mongoose-unique-validator');
-const commentSchema = mongoose.Schema({
-userId:{type: String, required: true},
-comment:{type: String, required: true},
-date:{type: Date, required: true},
-imageUrl:{type: [String], required: false},
-videUrl:{type: [String], required: false}
-});
-//commentSchema.plugin(uniqueValidator);
 
-module.exports = mongoose.model('Comment', commentSchema);
-*/
-
-class User{
-    constructor(Id, Comment, Date, imageUrl, videUrl){
-        this.userId = Id
-        this.comment = Comment   
-        this.Date = Date   
-        this.imageUrl = imageUrl  
-        this.videUrl = imageUrl  
-
-    }
-}
-module.exports = User;
-
-/*
-module.exports = (sequelize, Sequelize) => {
-    const Comment = sequelize.define("Comment", {
-      userId: {
-        type: Number
+  // Include Sequelize module.
+  const Sequelize = require('sequelize')
+  // Import sequelize object,
+  // Database connection pool managed by Seque4AtDDQlize.
+  const sequelize = require('../config/db.config2')
+  const User =  require('../models/user');
+  // Define method takes two arguments
+  // 1st - name of table
+  // 2nd - columns inside the table
+  const Comment = sequelize.define('Comment', {
+      // Column-1, user_id is an object with
+      // properties like type, keys,
+      // validation of column.
+      idComment:{/*Sequelize module has INTEGER Data_Type.*/ type:Sequelize.INTEGER,
+          /*To increment user_id automatically.*/autoIncrement:true,
+          /* user_id can not be null.*/allowNull:false,
+          /* For uniquely identify user.*/primaryKey:true
       },
-      comment: {
-        type: String
-      },
-      date: {
-        type: Date
-      },
-      imageUrl: {
-        type: [String]
-      },
-      videUrl: {
-        type: [String]
-      },
-    });
+      idUserComment: {
+        type:Sequelize.INTEGER,
+        /* user_id can not be null.*/allowNull:false,
+    },
+      // Column-2, lastname
+      comment: { type: Sequelize.STRING, allowNull:false },
+      // Column-3, firstname
+      image: { type: Sequelize.STRING, allowNull:true },
+      // Column-4, email
+      video: { type: Sequelize.STRING, allowNull:true },
+      // Column-7 Createion date, default values for
+      // dates => current time
+      myDate: { type: Sequelize.DATE,
+              defaultValue: Sequelize.NOW },
+      // Timestamps
+      createdAt: Sequelize.DATE,
+      updatedAt: Sequelize.DATE,
+  })
   
-    return Comment;
-  };*/
+  User.hasMany(Comment, {foreignKey: 'idUserComment', sourceKey: 'idUser'});
+  Comment.belongsTo(User, {foreignKey: 'idUserComment', targetKey: 'idUser'});
+  // Exporting User, using this constant
+  // we can perform CRUD operations on
+  // 'user' table.
+  module.exports = Comment

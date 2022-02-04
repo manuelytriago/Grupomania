@@ -97,7 +97,7 @@ export default {
           email : this.formdata.username,
           password : this.formdata.password,
           firstname :this.formdata.firstname.toUpperCase(),
-          lastname : this.formdata.lastname,
+          lastname : this.formdata.lastname.toUpperCase(),
           phonenumber : this.formdata.phone,
         }
           
@@ -107,7 +107,6 @@ export default {
             this.$store.commit('login',response); 
              console.log("response in component",response);
              if(response.status === 201 ){
-
              this.$router.push('/dashboard')
              }
             

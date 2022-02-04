@@ -4,8 +4,10 @@ const fs = require('fs');
 const script =  require('../js/script');
 const sql = require('mssql');
 var config = require('../config/db.config');
+const User =  require('../models/user');
 
 exports.createReply = async(req, res, next) => {
+  try {
   req.body = JSON.parse(req.body.body)
       // Create a Reply
       var actual_date = new Date();
@@ -20,21 +22,23 @@ exports.createReply = async(req, res, next) => {
       const dataset = await request.query(
           'INSERT INTO [reply] (idComment,idUser,reply,date) OUTPUT Inserted.idReply VALUES (@idComment,@idUser,@reply,@date)');
           const user = dataset;
-          console.log("dataset")
-          console.log(dataset)
+          //console.log("dataset")
+          //console.log(dataset)
       if (user.rowsAffected == 1) {
         res.status(201).json({
           message: 'comment posted successfully'
         })
       } else {
 
-          console.log("dataset")
-          console.log(dataset)
+          //console.log("dataset")
+         // console.log(dataset)
           res.status(500).json({
               message: "User was not created"
           });
       }
-
+    } catch (error) {
+      next(error);
+    }
       
       
     }

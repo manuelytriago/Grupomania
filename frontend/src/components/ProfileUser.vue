@@ -16,7 +16,7 @@
   </div>
   <div class="col-md-6">
     <label for="validationDefault02" class="form-label">Email address</label>
-      <input type="email" class="form-control" id="floatingInput" v-model="username">
+      <input type="email" class="form-control" id="floatingInput" v-model="username" v-mask="mask">
   </div>
   <div class="col-md-6">
      <label for="validationDefault02" class="form-label">Phone Number</label>
@@ -53,6 +53,7 @@ export default {
   name: 'SaveUser',
    data() {
     return {
+      mask: "",
       username: "",
       firstname:"",
       lastname:"",
@@ -74,9 +75,13 @@ export default {
         console.log(this.user.user);
         const user = this.user.user;
         let url = "http://localhost:3000/api/auth/user/"+user;  
-        this.$http.get(url)
+        this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.user}})
         .then(response => {
           this.username = response.data.email;
+          var user = response.data.email;
+          this.mask =  user.replace(/^(.)(.*)(.@.*)$/,(_, a, b, c) => a + b.replace(/./g, '*') + c);
+
+response.data.email;
           this.firstname = response.data.firstname;
           this.lastname = response.data.lastname;
           this.phonenumber = response.data.phonenumber;
@@ -92,8 +97,7 @@ export default {
       const user = this.user.user;
       let url = "http://localhost:3000/api/auth/deleteuser/"+user;
       let answer = document.getElementById("answer");
-       this.$http.delete(url)
-          .then(response => {
+       this.$http.delete(url,{headers: {'Authorization': this.user.token}}).then(response => {
             console.log(response);
                      this.$router.push('/')
                      answer.innerHTML = response.data.message;

@@ -47,11 +47,11 @@
       </div>-->
  
     <div v-if="replyresponse" id="posts" class="border me-5 ms-5 col margin_half" >
-      <div :class="'background_read'" @mouseover="addPost(user.id,postsdata.idComment)" v-for="postsdata in replyresponse" :key="postsdata.idComment" :id="'posts'+postsdata.idComment" class="border border-primary col-12 mt-sm-3 mb-sm-3 mt-2 mb-2 me-xl-0 ms-xl-0">
+      <div :class="'background_read'" v-for="postsdata in replyresponse" :key="postsdata.idComment" :id="'posts'+postsdata.idComment" class="border border-primary col-12 mt-sm-3 mb-sm-3 mt-2 mb-2 me-xl-0 ms-xl-0">
          <div id="posts_information" class=" d-inline-flex border border-primary col-12 mt-sm-3">
             <div class="border border-primary text-start mb-0 col-12">
               <p>
-              Post made by {{postsdata.firstname}} {{postsdata.lastname}} on {{commentdate(postsdata.date)}}
+              Post made by {{postsdata.firstname}} {{postsdata.lastname}} on {{commentdate(postsdata.myDate)}}
               </p> 
             </div>
             <!--<div class="border border-primary text-start mb-0 col-3">
@@ -152,7 +152,11 @@ export default {
     })
   },
     mounted(){
-      this.idcomment = this.user.idComment;
+    console.log("STATE STATUS IN REPLIES")
+     console.log(this.user.id)
+     console.log(this.user.status)
+     console.log(this.user.id)
+     this.idcomment = this.user.idComment;
      this.getPostsReplies( this.idcomment);
     },
 
@@ -182,7 +186,7 @@ export default {
       //var time = datecomment.split('T',2);
 
       console.log("NEW DATE");
-      console.log(date);
+
 
       var date1 = new Date(date);
      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -195,27 +199,12 @@ export default {
     
       let url = "/comment/"+this.user.id+"/"+idComment;
         
-        this.$http.get(url).then(response => {
+        this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.replyresponse = response.data.comments;
           //this.replyresponse = response.data.reply;
           console.log("response in component",response.data);
           })
           .catch(error => {
-            console.error(error);
-          });
-    },
-    addPost (user, post){
-      let url = "/auth/add";
-        let data1 = {
-          userId: user,
-          postiD: post,
-        }
-         this.$http.post(url,data1).then(response => {
-          this.clear()
-          console.log("response in component",response);
-          })
-          .catch(error => {
-            console.error("error");
             console.error(error);
           });
     },
@@ -234,7 +223,7 @@ export default {
         const fileField = document.querySelector('input[type="file"]')
         formData.append("files", fileField.files[0])
         formData.append("body", JSON.stringify(data1));
-        this.$http.post(url,formData).then(response => {
+        this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.user}}).then(response => {
           this.clear()
           console.log("response in component",response);
           })
@@ -274,7 +263,7 @@ export default {
         }
         const formData = new FormData();
         formData.append("body", JSON.stringify(data1));
-        this.$http.post(url,formData).then(response => {
+        this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.user}}).then(response => {
           this.clear()
           console.log("response in component",response);
           })
@@ -461,12 +450,12 @@ body {
       }
 
 .background_read{
-background-color: wheat;
+background-color:white;
 }
 
 .background_not_read{
 
-background-color:black;
+background-color: #f1eeed;
   
 }
 </style>

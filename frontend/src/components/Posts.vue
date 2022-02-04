@@ -1,11 +1,14 @@
 <template>
-    <div v-if="posts_shared" id="posts" class="border me-5 ms-5 col margin_half" >
-      <div :class="postsdata.user_tag == true? 'background_read' : 'background_not_read'" @mouseover="/*addPost(user.id,postsdata.idComment)*/" v-for="postsdata in posts_shared" :key="postsdata.idComment" :id="'posts'+postsdata.idComment" class="border border-primary col-12 mt-sm-3 mb-sm-3 mt-2 mb-2 me-xl-0 ms-xl-0">
-         <div id="posts_information" class=" d-inline-flex border border-primary col-12 mt-sm-3">
-            <div class="border border-primary text-start mb-0 col-12">
-              <p>
-              Post made by {{postsdata.firstname}} {{postsdata.lastname}} on {{commentdate(postsdata.date)}}
+
+    <div v-if="posts_shared" id="posts" class="me-5 ms-5 col margin_half" >
+      <div :class="postsdata.user_tag == true? 'background_read' : 'background_not_read'" @mouseover="/*addPost(user.id,postsdata.idComment)*/" v-for="postsdata in posts_shared" :key="postsdata.idComment" :id="'posts'+postsdata.idComment" class="border border-3 rounded col-12 mt-sm-3 mb-sm-3 mt-2 mb-2 me-xl-0 ms-xl-0">
+         <div id="posts_information" class="d-inline-flex col-12 mt-sm-3">
+            <div class="d-inline-flex flex-row text-start mb-0 col-12">
+              <p class="flex-fill fs-4 fw-bolder">
+              Post made by {{postsdata.firstname}} {{postsdata.lastname}} on {{commentdate(postsdata.myDate)}}
               </p> 
+              <p :class="postsdata.user_tag == true? 'post_read' : 'post_not_read'" class="text-uppercase">
+              </p>
             </div>
             <!--<div class="border border-primary text-start mb-0 col-3">
             
@@ -15,8 +18,8 @@
             </div>-->
             
           </div>
-          <div id="comments" class="border border-primary col-12 mt-sm-3">
-            <div id="comments" class="border border-primary col-12">
+          <div id="comments" class="col-12 ms-3 mt-sm-3">
+            <div id="comments" class="col-12 ms-3 me-sm-3">
               <p class="text-start ">
               {{postsdata.comment}}
               </p>  
@@ -37,17 +40,22 @@
               </p>  
             </div>
           </div>
-          <div v-if="replyresponse" id="comments_actions" class="col-12 d-flex mt-2 mb-2 me-2">
-            <div id="comments" class="border-primary col-xl-2">
-              <a class="navbar-brand me-0 pt-0 pb-0 w-100 h-100" href="#">
+          <div v-if="(replyresponse===null||replyresponse)" id="comments_actions" class="col-12 d-flex mt-2 mb-2 me-2">
+            <div id="comments" class="border-primary col-xl-12 d-flex flex-row">
+              <a class="navbar-brand me-2 pt-0 pb-0" href="#">
                 <img :src="require('../../../assets/comment.webp')" class="img-fluid" alt="" width="25" height="25">
               </a>
-              <a :id="'button'+postsdata.idComment" @click="show(postsdata)" class="navbar-brand me-0 pt-0 pb-0">
+              <a :id="'button'+postsdata.idComment" @click="show(postsdata)" class="navbar-brand me-2 pt-0 pb-0">
                 {{postsdata.total_replies}} Comments
               </a>
-        
+               <a href="#" :id="'button'+postsdata.idComment" @click="reply(postsdata.idComment)" class="navbar-brand me-2 pt-0 pb-0">
+                Reply Post
+              </a>
+
+              <input type="text" :id="postsdata.idComment" class=" form-control w-100 h-100" placeholder="WRITE YOUR REPLY" v-model="replytext[postsdata.idComment]" required>
+           
             </div>
-              <div :id="'show'+postsdata.idComment" class="d-none border border-primary col-10" >
+            <div :id="'show'+postsdata.idComment" class="d-none border border-primary col-10" >
 
                 <div v-for="replys in postsdata.replies" :key="replys.id" class=" border border-primary col-12" >
 
@@ -64,19 +72,19 @@
               Share
             </a> -->
           </div>
-          <div id="post_actions" class="col-12 d-flex mt-2 mb-2 me-2">
+          <!--<div id="post_actions" class="col-12 d-flex mt-2 mb-2 me-2">
             <div id="reply" class="border border-primary col-1 col-sm-2 ps-0 pe-0 col-lg-2 col-xl-2 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 ">
               <a href="#" :id="'button'+postsdata.idComment" @click="reply(postsdata.idComment)" class="navbar-brand me-0 pt-0 pb-0">
-                Replys
+               Reply Post
               </a>
             </div>
             <div id="replytext" class="border border-primary col-11 col-sm-10 ps-0 pe-0 col-lg-10 col-xl-10 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 ">
               <input type="text" :id="postsdata.idComment" class=" form-control w-100 h-100" placeholder="WRITE YOUR REPLY" v-model="replytext[postsdata.idComment]" required>
             </div>
-          <!-- <a href="#">
+           <a href="#">
               Share
-            </a> -->
-          </div>
+            </a> 
+          </div> -->
 
 
       </div> 
@@ -107,7 +115,7 @@ export default {
   },
   props: {
     posts_shared: {
-      type:Object,
+      type: Array,
       required: true
     }
   },
@@ -117,9 +125,10 @@ export default {
     })
   },
     mounted(){
-      console.log("posts_shared",this.posts_shared[0]);
           
-     this.dataPosts();
+      //console.log("posts_shared",this.posts_shared[0]);
+         // console.log("USER ID FROM DASHBOARD",this.user.id);
+     //this.dataPosts();
     },
 
   methods: {
@@ -147,8 +156,8 @@ export default {
        //var time = date.split('T',1);
       //var time = datecomment.split('T',2);
 
-      console.log("NEW DATE");
-      console.log(date);
+      /*console.log("NEW DATE");
+      console.log(date);*/
 
       var date1 = new Date(date);
      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -157,16 +166,16 @@ export default {
       
       return datestring;
       },
-    dataPosts(){
+    dataPosts(){    
+    
     
       let url = "/comment/"+this.user.id;
         
-        this.$http.get(url).then(response => {
+        this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.posts = JSON.parse(JSON.stringify(response.data.comments));
           this.replyresponse = JSON.parse(JSON.stringify(response.data.reply));
-          
           this.user_tag = JSON.parse(JSON.stringify(response.data.user));
-          console.log("response in component",response.data);
+          //console.log("response in component",response.data);
           })
           .catch(error => {
             console.error(error);
@@ -178,29 +187,27 @@ export default {
           userId: user,
           postiD: post,
         }
-         this.$http.post(url,data1).then(response => {
+         this.$http.post(url,data1,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
+           console.log(this.posts_shared)
            if(response.status == 201){
-
-             for ( var i = 0 ; i < this.posts_shared.length ; i++){
+             /*for ( var i = 0 ; i < this.posts_shared.length ; i++){
               if(this.posts_shared[i].idComment == post){
                 this.posts_shared[i].user_tag = true;
               }
-              }
-          console.log("response in component",post);
-          console.log("response in component",response);
+              }*/
+    
           //this.replyresponse[post].user_tag == true;
           //this.clear()
           //console.log("response in component",response);
            }
           })
           .catch(error => {
-            console.error("error");
-            console.error(error);
+               if(error.status == 500){
+            console.error(error.message);
+               }
           });
     },
     post () {    
-      console.log("this.multimedia")
-      console.log(this.multimedia)
      const comment = document.getElementById('comment1').value;
      if(comment != ''){
         let url = "/comment";
@@ -213,7 +220,9 @@ export default {
         const fileField = document.querySelector('input[type="file"]')
         formData.append("files", fileField.files[0])
         formData.append("body", JSON.stringify(data1));
-        this.$http.post(url,formData).then(response => {
+        console.log(this.user)
+        console.log(this.user.id)
+        this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.clear()
           console.log("response in component",response);
           })
@@ -227,8 +236,7 @@ export default {
     },
   
     show (postdata) {
-    
-      event.preventDefault()
+      console.log("sending this post to be add")
         this.addPost(this.user.id,postdata.idComment)
         this.$store.commit('comment',postdata.idComment);
         this.$router.push({path:'/replies/',params:{postinfo: postdata}})
@@ -247,19 +255,23 @@ export default {
     
     },
     reply (idComment) {    
-      console.log("this.multimedia")
-      console.log(this.multimedia)
+      /*console.log("this.multimedia")
+      console.log(this.multimedia)*/
      const comment = document.getElementById(idComment).value;
      if(comment != ''){
         let url = "/Reply";
         let data1 = {
+          userId: this.user.user,
           id: this.user.id,
           idComment: idComment,
           reply: this.replytext[idComment]
         }
+        /*const options = {
+        headers: {'Authorization':this.user.token}
+        };*/
         const formData = new FormData();
         formData.append("body", JSON.stringify(data1));
-        this.$http.post(url,formData).then(response => {
+        this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.clear()
           console.log("response in component",response);
           })
@@ -288,7 +300,7 @@ export default {
          if(files[0].type === 'video/mp4'){   
             if (!document.getElementById("video") && !document.getElementById("image") ){
                 createVideo(this.imageUrl)
-                console.log('HAY VIDEO')
+                //console.log('HAY VIDEO')
             }else{
                  if(document.getElementById("image") ){
                 const picture1 = document.getElementById('image');
@@ -446,12 +458,19 @@ body {
       }
 
 .background_read{
-background-color: wheat;
+background-color:white;
 }
 
 .background_not_read{
 
-background-color:black;
+background-color: #f1eeed;
   
+}
+
+p.post_read::before{
+  content: "It's read";
+}
+p.post_not_read::before{
+  content: "It is not read";
 }
 </style>

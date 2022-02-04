@@ -15,9 +15,13 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VuePhoneNumberInput from 'vue-phone-number-input';
 import 'vue-phone-number-input/dist/vue-phone-number-input.css';
 import Vuelidate from 'vuelidate';
+import VueMask from 'v-mask'
+console.log(store.state)
 const base = axios.create({
   baseURL: "http://localhost:3000/api"
 });
+
+Vue.use(VueMask);
 Vue.component('vue-phone-number-input', VuePhoneNumberInput);
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)

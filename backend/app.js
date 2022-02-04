@@ -12,6 +12,25 @@ const commentRoutes = require('./routes/comment');
 const replyRoutes = require('./routes/reply');
 const userRoutes = require('./routes/user');
 const app = express();
+const Sequelize = require('sequelize')
+// Import the user model we have defined 
+const User = require('./models/user')
+// Import sequelize object,
+// Database connection pool managed by Sequelize.
+const sequelize = require('./config/db.config2')
+// Create all the table defined using  
+// sequelize in Database 
+    
+// Sync all models that are not 
+// already in the database 
+    
+// Force sync all models 
+// It will drop the table first  
+// and re-create it afterwards 
+sequelize.sync({force:false})
+
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 /*mongoose.connect('mongodb+srv://project6:Project6OpenClassroom@cluster0.c189u.mongodb.net/Grupomania?retryWrites=true&w=majority')
 .then(() => {
@@ -57,12 +76,11 @@ db.connect((err) => {
 console.log("After connectionn");*/
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization, headers, params');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
 });
 
-app.use(bodyParser.json());
 //app.use('',express.static(path.join(__dirname, 'assets/images')));
 app.use('/api/reply',replyRoutes);
 app.use('/api/comment',commentRoutes);

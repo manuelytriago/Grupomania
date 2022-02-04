@@ -67,9 +67,7 @@ export default {
         this.$router.push('/signup')
       },
       SignInUser(event) {
-      event.preventDefault()
-      
-          
+      event.preventDefault()    
         let url = "http://localhost:3000/api/auth/login"
         let data1 = {
           email : this.username,
@@ -77,15 +75,17 @@ export default {
         }
          let answer = document.getElementById("response");
        /* answer.innerHTML = "HELLO CLICK ITS WORKING";*/
-        this.$http.post(url, data1)
-        .then(response => {
+        //this.$http.post(url, data1,{headers: {'Authorization': this.user.token}})
+        
+        this.$http.post(url,data1).then(response => {
          
           console.log(response);
           this.$store.commit('login',response); 
           console.log("this.user") 
-           console.log(this.user)
+           console.log(this.user.user)
+          console.log("this.user") 
+           console.log(this.user.token)
             this.$router.push('/dashboard')
-            
              console.log(response);
           })
           .catch(error => {

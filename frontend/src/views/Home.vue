@@ -37,10 +37,8 @@
       </div>
     </div>
 
-        <div v-if="posts" id="posts" class="border row-cols-lg-2 me-5 ms-5 col">
-          <All :posts_shared="posts"
-          
-          />
+        <div v-if="posts.length" id="posts" class="border row-cols-lg-2 me-5 ms-5 col">
+          <All :posts_shared="posts"/>
         </div>
       </div>
 
@@ -65,7 +63,7 @@ export default {
       image: null,
       video: null,
       multimedia: null,
-      posts: null,
+      posts: [],
       replyresponse:null,
       user_tag:null,
       replytext: []
@@ -79,7 +77,7 @@ export default {
       user: (state) => state.user
     })
   },
-    mounted(){
+     mounted(){
      // invocar los métodos
      this.dataPosts();
     },
@@ -123,8 +121,14 @@ export default {
     
       let url = "/comment/"+this.user.id;
         
-        this.$http.get(url).then(response => {
+        this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
+          let check = typeof(JSON.parse(JSON.stringify(response.data.comments)));
+       
+
+          console.log("JSON.parse(JSON.stringify(response.data.comments)")
+          if(check!= 'Array'){
           this.posts = JSON.parse(JSON.stringify(response.data.comments));
+          }
           this.replyresponse = JSON.parse(JSON.stringify(response.data.reply));
           this.user_tag = JSON.parse(JSON.stringify(response.data.user));
           console.log("response in component",this.posts);
@@ -132,14 +136,15 @@ export default {
           .catch(error => {
             console.error(error);
           });
+
     },
-     addPost (user, post){
+    addPost (user, post){
       let url = "/auth/add";
         let data1 = {
           userId: user,
           postiD: post,
         }
-         this.$http.post(url,data1).then(response => {
+         this.$http.post(url,data1,{headers: {'Authorization': this.user.token},params:{'userId': this.user.user}}).then(response => {
            if(response.status == 201){
 
              for ( var i = 0 ; i < this.posts.length ; i++){
@@ -174,9 +179,10 @@ export default {
         const fileField = document.querySelector('input[type="file"]')
         formData.append("files", fileField.files[0])
         formData.append("body", JSON.stringify(data1));
-        this.$http.post(url,formData).then(response => {
+        this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.clear()
           console.log("response in component",response);
+           this.dataPosts();
           })
           .catch(error => {
             console.error(error);
@@ -214,7 +220,7 @@ export default {
         }
         const formData = new FormData();
         formData.append("body", JSON.stringify(data1));
-        this.$http.post(url,formData).then(response => {
+        this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.user}}).then(response => {
           this.clear()
           console.log("response in component",response);
           })
