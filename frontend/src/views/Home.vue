@@ -100,15 +100,8 @@ export default {
       }
     },
     commentdate(datecomment){
-
-      //var date = new Date(Date.parse(datecomment));
-      //var date = datecomment.split('T',1);
        var date = datecomment.split('.',1);
-       //var time = date.split('T',1);
-      //var time = datecomment.split('T',2);
 
-      console.log("NEW DATE");
-      console.log(date);
 
       var date1 = new Date(date);
      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -123,15 +116,11 @@ export default {
         
         this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           let check = typeof(JSON.parse(JSON.stringify(response.data.comments)));
-       
-
-          console.log("JSON.parse(JSON.stringify(response.data.comments)")
           if(check!= 'Array'){
           this.posts = JSON.parse(JSON.stringify(response.data.comments));
           }
           this.replyresponse = JSON.parse(JSON.stringify(response.data.reply));
           this.user_tag = JSON.parse(JSON.stringify(response.data.user));
-          console.log("response in component",this.posts);
           })
           .catch(error => {
             console.error(error);
@@ -152,21 +141,13 @@ export default {
                 this.posts[i].user_tag = true;
               }
               }
-          console.log("response in component",post);
-          console.log("response in component",response);
-          //this.replyresponse[post].user_tag == true;
-          //this.clear()
-          //console.log("response in component",response);
            }
           })
-          .catch(error => {
-            console.error("error");
+          .catch(error => { 
             console.error(error);
           });
     },
     post () {    
-      console.log("this.multimedia")
-      console.log(this.multimedia)
      const comment = document.getElementById('comment1').value;
      if(comment != ''){
         let url = "/comment";
@@ -180,8 +161,8 @@ export default {
         formData.append("files", fileField.files[0])
         formData.append("body", JSON.stringify(data1));
         this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
+          this.addPost(response.data.message.idUserComment,response.data.message.idComment)
           this.clear()
-          console.log("response in component",response);
            this.dataPosts();
           })
           .catch(error => {
@@ -194,10 +175,9 @@ export default {
     },
   
     show (idComment) {
-      var display = document.getElementById('show'+idComment);
+    var display = document.getElementById('show'+idComment);
 
     if(display.classList.contains('d-none')){
-      console.log("entre block")
       display.classList.remove('d-none');
       display.classList.add('d-block');
     }else{
@@ -208,8 +188,6 @@ export default {
     
     },
     reply (idComment) {    
-      console.log("this.multimedia")
-      console.log(this.multimedia)
      const comment = document.getElementById(idComment).value;
      if(comment != ''){
         let url = "/Reply";
@@ -249,7 +227,6 @@ export default {
          if(files[0].type === 'video/mp4'){   
             if (!document.getElementById("video") && !document.getElementById("image") ){
                 createVideo(this.imageUrl)
-                console.log('HAY VIDEO')
             }else{
                  if(document.getElementById("image") ){
                 const picture1 = document.getElementById('image');

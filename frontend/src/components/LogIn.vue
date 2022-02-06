@@ -73,20 +73,10 @@ export default {
           email : this.username,
           password : this.password,
         }
-         let answer = document.getElementById("response");
-       /* answer.innerHTML = "HELLO CLICK ITS WORKING";*/
-        //this.$http.post(url, data1,{headers: {'Authorization': this.user.token}})
-        
+         let answer = document.getElementById("response"); 
         this.$http.post(url,data1).then(response => {
-         
-          console.log(response);
           this.$store.commit('login',response); 
-          console.log("this.user") 
-           console.log(this.user.user)
-          console.log("this.user") 
-           console.log(this.user.token)
-            this.$router.push('/dashboard')
-             console.log(response);
+          this.$router.push('/dashboard')
           })
           .catch(error => {
              answer.innerHTML = error.response.data.message;

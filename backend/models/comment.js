@@ -1,5 +1,4 @@
 
-
   // Include Sequelize module.
   const Sequelize = require('sequelize')
   // Import sequelize object,
@@ -10,13 +9,13 @@
   // 1st - name of table
   // 2nd - columns inside the table
   const Comment = sequelize.define('Comment', {
-      // Column-1, user_id is an object with
+      // Column-1, Comment_id is an object with
       // properties like type, keys,
       // validation of column.
       idComment:{/*Sequelize module has INTEGER Data_Type.*/ type:Sequelize.INTEGER,
-          /*To increment user_id automatically.*/autoIncrement:true,
-          /* user_id can not be null.*/allowNull:false,
-          /* For uniquely identify user.*/primaryKey:true
+          /*To increment Comment_id automatically.*/autoIncrement:true,
+          /* Comment_id can not be null.*/allowNull:false,
+          /* For uniquely identify Comment.*/primaryKey:true
       },
       idUserComment: {
         type:Sequelize.INTEGER,
@@ -41,5 +40,5 @@
   Comment.belongsTo(User, {foreignKey: 'idUserComment', targetKey: 'idUser'});
   // Exporting User, using this constant
   // we can perform CRUD operations on
-  // 'user' table.
+  // 'Comment' table.
   module.exports = Comment

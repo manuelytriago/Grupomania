@@ -88,6 +88,7 @@
 
 
       </div> 
+           <p class="mt-5 mb-3 alert-danger" id="answer"></p>
     </div>
 
 </template>
@@ -125,10 +126,6 @@ export default {
     })
   },
     mounted(){
-          
-      //console.log("posts_shared",this.posts_shared[0]);
-         // console.log("USER ID FROM DASHBOARD",this.user.id);
-     //this.dataPosts();
     },
 
   methods: {
@@ -149,16 +146,7 @@ export default {
       }
     },
     commentdate(datecomment){
-
-      //var date = new Date(Date.parse(datecomment));
-      //var date = datecomment.split('T',1);
        var date = datecomment.split('.',1);
-       //var time = date.split('T',1);
-      //var time = datecomment.split('T',2);
-
-      /*console.log("NEW DATE");
-      console.log(date);*/
-
       var date1 = new Date(date);
      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     var datestring = date1.toLocaleDateString('en-US', options)+ " " +
@@ -167,15 +155,11 @@ export default {
       return datestring;
       },
     dataPosts(){    
-    
-    
       let url = "/comment/"+this.user.id;
-        
         this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.posts = JSON.parse(JSON.stringify(response.data.comments));
           this.replyresponse = JSON.parse(JSON.stringify(response.data.reply));
           this.user_tag = JSON.parse(JSON.stringify(response.data.user));
-          //console.log("response in component",response.data);
           })
           .catch(error => {
             console.error(error);
@@ -188,18 +172,12 @@ export default {
           postiD: post,
         }
          this.$http.post(url,data1,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
-           console.log(this.posts_shared)
-           if(response.status == 201){
-             /*for ( var i = 0 ; i < this.posts_shared.length ; i++){
-              if(this.posts_shared[i].idComment == post){
-                this.posts_shared[i].user_tag = true;
-              }
-              }*/
-    
-          //this.replyresponse[post].user_tag == true;
-          //this.clear()
-          //console.log("response in component",response);
-           }
+          let answer = document.getElementById("answer");
+          if(response.status == 201){
+          answer.innerHTML = "Post read"
+           }else{
+          answer.innerHTML = "Something went wrong"
+          }
           })
           .catch(error => {
                if(error.status == 500){
@@ -220,11 +198,14 @@ export default {
         const fileField = document.querySelector('input[type="file"]')
         formData.append("files", fileField.files[0])
         formData.append("body", JSON.stringify(data1));
-        console.log(this.user)
-        console.log(this.user.id)
         this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.clear()
-          console.log("response in component",response);
+         let answer = document.getElementById("answer");
+          if(response.status == 201){
+          answer.innerHTML = "Post created"
+          }else{
+          answer.innerHTML = "Something went wrong"
+          }
           })
           .catch(error => {
             console.error(error);
@@ -255,7 +236,12 @@ export default {
         formData.append("body", JSON.stringify(data1));
         this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.clear()
-          console.log("response in component",response);
+         let answer = document.getElementById("answer");
+          if(response.status == 201){
+          answer.innerHTML = "Reply created"
+          }else{
+          answer.innerHTML = "Something went wrong"
+          }
         }).catch(error => {
             console.error(error.message);
         });
@@ -281,7 +267,6 @@ export default {
          if(files[0].type === 'video/mp4'){   
             if (!document.getElementById("video") && !document.getElementById("image") ){
                 createVideo(this.imageUrl)
-                //console.log('HAY VIDEO')
             }else{
                  if(document.getElementById("image") ){
                 const picture1 = document.getElementById('image');

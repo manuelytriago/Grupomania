@@ -119,6 +119,7 @@
       </div> 
 
     </div>
+     <p class="mt-5 mb-3 alert-danger" id="answer"></p>
     </div> 
 </template>
 
@@ -152,10 +153,6 @@ export default {
     })
   },
     mounted(){
-    console.log("STATE STATUS IN REPLIES")
-     console.log(this.user.id)
-     console.log(this.user.status)
-     console.log(this.user.id)
      this.idcomment = this.user.idComment;
      this.getPostsReplies( this.idcomment);
     },
@@ -179,14 +176,7 @@ export default {
     },
     commentdate(datecomment){
 
-      //var date = new Date(Date.parse(datecomment));
-      //var date = datecomment.split('T',1);
        var date = datecomment.split('.',1);
-       //var time = date.split('T',1);
-      //var time = datecomment.split('T',2);
-
-      console.log("NEW DATE");
-
 
       var date1 = new Date(date);
      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -201,16 +191,12 @@ export default {
         
         this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.replyresponse = response.data.comments;
-          //this.replyresponse = response.data.reply;
-          console.log("response in component",response.data);
           })
           .catch(error => {
             console.error(error);
           });
     },
     post () {    
-      console.log("this.multimedia")
-      console.log(this.multimedia)
      const comment = document.getElementById('comment1').value;
      if(comment != ''){
         let url = "/comment";
@@ -225,7 +211,12 @@ export default {
         formData.append("body", JSON.stringify(data1));
         this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.user}}).then(response => {
           this.clear()
-          console.log("response in component",response);
+          let answer = document.getElementById("answer");
+          if(response.status == 201){
+          answer.innerHTML = "Post created"
+          }else{
+          answer.innerHTML = "Something went wrong"
+          }
           })
           .catch(error => {
             console.error(error);
@@ -240,7 +231,6 @@ export default {
       var display = document.getElementById('show'+idComment);
 
     if(display.classList.contains('d-none')){
-      console.log("entre block")
       display.classList.remove('d-none');
       display.classList.add('d-block');
     }else{
@@ -251,7 +241,7 @@ export default {
     
     },
     reply (idComment) {    
-     const comment = this.replyComment
+     const comment = document.getElementById(idComment).value;
      if(comment != ''){
         let url = "/Reply";
         let data1 = {
@@ -264,7 +254,13 @@ export default {
         formData.append("body", JSON.stringify(data1));
         this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.clear()
-          console.log("response in component",response);
+          let answer = document.getElementById("answer");
+          if(response.status == 201){
+          answer.innerHTML = "Reply created"
+          }else{
+          answer.innerHTML = "Something went wrong"
+          }
+          
           }).catch(error => {
             console.error(error.message);
           });
@@ -290,7 +286,6 @@ export default {
          if(files[0].type === 'video/mp4'){   
             if (!document.getElementById("video") && !document.getElementById("image") ){
                 createVideo(this.imageUrl)
-                console.log('HAY VIDEO')
             }else{
                  if(document.getElementById("image") ){
                 const picture1 = document.getElementById('image');

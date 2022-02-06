@@ -1,8 +1,5 @@
-
-
   // Include Sequelize module.
   const Sequelize = require('sequelize')
-
   // Import sequelize object,
   // Database connection pool managed by Sequelize.
   const sequelize = require('../config/db.config2')
@@ -12,16 +9,16 @@
   // 2nd - columns inside the table
   const Reply = sequelize.define('Replie', {
 
-      // Column-1, user_id is an object with
+      // Column-1, reply is an object with
       // properties like type, keys,
       // validation of column.
       idReply:{/*Sequelize module has INTEGER Data_Type.*/ type:Sequelize.INTEGER,
-          /*To increment user_id automatically.*/autoIncrement:true,
-          /* user_id can not be null.*/allowNull:false,
-          /* For uniquely identify user.*/primaryKey:true
+          /*To increment reply_id automatically.*/autoIncrement:true,
+          /* reply_id can not be null.*/allowNull:false,
+          /* For uniquely identify reply.*/primaryKey:true
       },
       idCommentReply:{/*Sequelize module has INTEGER Data_Type.*/ type:Sequelize.INTEGER,
-        /* user_id can not be null.*/allowNull:false,
+        /* comment_ID can not be null.*/allowNull:false,
         /* For uniquely identify user.*/primaryKey:true
     },
       idUser: {
@@ -44,7 +41,7 @@
   
   Comment.hasMany(Reply, {foreignKey: 'idCommentReply', sourceKey: 'idComment'});
   Reply.belongsTo(Comment, {foreignKey: 'idCommentReply', targetKey: 'idComment'});
-  // Exporting User, using this constant
+  // Exporting Reply, using this constant
   // we can perform CRUD operations on
-  // 'user' table.
+  // 'Reply' table.
   module.exports = Reply

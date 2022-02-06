@@ -2,58 +2,26 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 //import SignIn from '../views/SignIn.vue'
 import Home from '../views/Home.vue'
-import Comment from '../views/Comment.vue'
 //import store from "../auth/store"
 import SignIn from "../views/SignIn"
 import Profile from "../views/Profile"
-
 import store from "../auth/store"
-//import createRouter from "vue-router"
-//import createWebHistory from "vue-router"
-//import { authenticationGuard } from '@/auth/authenticationGuard';
-
 Vue.use(VueRouter)
-/*const ifNotAuthenticated = (to, from, next) => {
-  console.log(store.getters);
-  if (!store.getters.isAuthenticated) {
-    next();
-    return;
-  }
-  next("/dashboard");
-};
-
-const ifAuthenticated = (to, from, next) => {
-  if (store.getters.isAuthenticated) {
-    next();
-    return;
-  }
-  next("/");
-};
-*/
 const routes = [
   {
     path: '/',
     name: 'SignIn',
     component: SignIn,
-    //beforeEnter: ifNotAuthenticated,
   },
   {
     path: '/dashboard',
     name: 'Home',
     component: Home,
-   // beforeEnter: ifAuthenticated,
-  },
-  {
-    path: '/comment',
-    name: 'Comment',
-    component: Comment,
-    //beforeEnter: ifAuthenticated,
   },
   {
     path: '/profile',
     name: 'Profile',
     component: Profile,
-    //beforeEnter: ifNotAuthenticated,
   },
   {
     path: '/signup',

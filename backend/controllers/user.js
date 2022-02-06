@@ -2,7 +2,6 @@ const fs = require('fs');
 const bcrypt =  require('bcrypt');
 const jwtoken =  require('jsonwebtoken');
 const script =  require('../js/script');
-var config = require('../config/db.config');
 const sql = require('mssql');
 const { parse } = require('path');
 const { json } = require('body-parser');
@@ -113,17 +112,14 @@ let arrayTags = [];
                     try {
                         const user = await User.findOne({where: {idUser: req.body.userId}});
                         var conditional = user.dataValues.tag_posts;
-                        if (conditional === null){
-                            console.log("conditional is null")   
+                        if (conditional === null){ 
                             arrayTags.push(JSON.stringify(req.body.postiD))
                             var newarray = arrayTags.toLocaleString();
                             const user2 = await User.update({ tag_posts: newarray }, {
                                 where: {
                                   idUser: req.body.userId
                                 }
-                              });
-                              console.log("user2")  
-                              console.log(user2)  
+                              });  
                               if (user2 == 1) {
                                 res.status(201).json({
                                   message: 'comment viewed successfully'
@@ -136,25 +132,16 @@ let arrayTags = [];
                               
                                             
                         }else{
-                            console.log("conditional is not null") 
                             var tags = JSON.parse(JSON.stringify(user.dataValues.tag_posts))
                             var post_condition = true;
                             tags = tags.split(",");
-                                console.log(tags)
-                                console.log(tags.length)
-                            for (var i = 0; i < tags.length; i++){
-                                console.log("tags[i]")
-                                console.log(tags[i])
-                                console.log("req.body.postiD")
-                                console.log(req.body.postiD)
-
-                                if(tags[i] == req.body.postiD){
+                            for (var i = 0; i < tags.length; i++){    
+                                if(parseInt(tags[i]) === req.body.postiD){
                                     post_condition = false;
                                     i = (tags.length)+1;
                                 }
                             }
-                            console.log("conditional is "+post_condition) 
-                            if(post_condition == true){
+                            if(post_condition === true){
                             var tags = JSON.parse(JSON.stringify(user.dataValues.tag_posts));
                             arrayTags.push(tags);
                             var value = JSON.parse(JSON.stringify(req.body.postiD))
@@ -164,9 +151,7 @@ let arrayTags = [];
                                 where: {
                                   idUser: req.body.userId
                                 }
-                              });
-                              console.log("user2")  
-                              console.log(user2)  
+                              });  
                               if (user2 == 1) {
                                 res.status(201).json({
                                   message: 'comment viewed successfully'

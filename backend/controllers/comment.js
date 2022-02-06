@@ -6,7 +6,6 @@ const { QueryTypes } = require('sequelize');
 const fs = require('fs');
 const script =  require('../js/script');
 const sql = require('mssql');
-var config = require('../config/db.config');
 const { Console } = require('console');
 const { json } = require('body-parser');
 const sequelize = require('../config/db.config2');
@@ -33,10 +32,8 @@ exports.getAllComment = async(req, res, next) => {
    var comments2 = JSON.parse(JSON.stringify(comments));
    var replys2 = JSON.parse(JSON.stringify(replys))
    var user_tag2 = JSON.parse(JSON.stringify(usertags[0].tag_posts))
-  console.log(replys2)
     for ( var i = 0 ; i < comments2.length ; i++){
       for ( var j = 0 ; j < replys2.length ; j++){
-        console.log(replys2[j].idCommentReply)
         if (comments2[i].idComment == replys2[j].idCommentReply ){
           if (comments2[i].replies == undefined){
           comments2[i].replies = [];
@@ -61,7 +58,6 @@ exports.getAllComment = async(req, res, next) => {
       }
       
     }
-  console.log(comments2)
 const data = {comments:comments2,reply:JSON.parse(JSON.stringify(replys2)),user:JSON.parse(JSON.stringify(user_tag2))}
         if(!comments2){
             return res.status(401).json({
@@ -90,8 +86,6 @@ exports.createComment = async(req, res, next) => {
           comment: req.body.comment,
           video: req.file.filename,
           date: actual_date});
-          console.log("comment")
-          console.log(comment)
           res.status(201).json({
             message: comment
           })
@@ -112,6 +106,8 @@ exports.createComment = async(req, res, next) => {
         const comment = await Comment.create({ 
           idUserComment:req.body.userId,
           comment: req.body.comment,
+          video: null,
+          image: null,
           date: actual_date});
           res.status(201).json({
             message: comment
@@ -150,7 +146,6 @@ exports.getOneComment =  async (req, res, next) => {
           
         }  
       }
-      console.log(comments2)
       const data = {comments:comments2,reply:JSON.parse(JSON.stringify(replys2))}
       res.send(data)
     }
@@ -158,215 +153,3 @@ exports.getOneComment =  async (req, res, next) => {
     res.status(400).json({message: "Not user found"});
   }
 }
-
-/* FUNCTION TO MODIFY A COMMENT DONE 
-exports.modifyComment = (req, res, next) => {
-        let comment = new Comment({ _id: req.params._id });
-        if (req.file) {
-          const url = req.protocol + '://' + req.get('host');
-          req.body.comment = JSON.parse(req.body.comment);
-          comment = {
-            _id: req.params.id,
-            name: req.body.comment.name,
-            manufacturer: req.body.comment.manufacturer,
-            description: req.body.comment.description,
-            imageUrl: '/../../assets/'+req.file.filename,
-            mainPepper: req.body.comment.mainPepper,
-            heat: req.body.comment.heat,
-            userId: req.body.comment.userId,
-          };
-        } else {
-          comment = {
-            _id: req.params.id,
-            name: req.body.name,
-            manufacturer: req.body.manufacturer,
-            description: req.body.description,
-            //imageUrl: req.body.imageUrl,
-            mainPepper: req.body.mainPepper,
-            heat: req.body.heat,
-            userId: req.body.userId
-          };
-        }
-        Comment.updateOne({_id: req.params.id}, comment).then(
-          () => {
-            res.status(201).json({
-              message: 'Sauce updated successfully!'
-            });
-          }
-        ).catch(
-          (error) => {
-            res.status(400).json({
-              message: error
-            });
-          }
-        );
-} 
-
-
-
-
-
-
-
-
-// Not for this project
-exports.deleteComment = (req, res, next) => {
-  Comment.findOne({_id: req.params.id}).then(
-          (comment) => {
-            const filename = comment.imageUrl.split('/../../assets/')[1];
-            fs.unlink('../assets/'+filename, () => {
-              Comment.deleteOne({_id: req.params.id}).then(
-                () => {
-                  res.status(200).json({
-                    message: 'Sauce Deleted!'
-                  });
-                }
-              ).catch(
-                (error) => {
-                  res.status(400).json({
-                    message: error
-                  });
-                }
-              );
-            });
-          }
-        );
-    };
-// Not for this project
-exports.likeComment = (req, res, next) => {
-  var userslikes = new Comment({ _id: req.params.id});
-  let comment = new Comment({ _id: req.params.id });
-  // Checking if it is like, cancelling or dislikes
-    // Like
-      if (req.body.like == 1){
-        Comment.findOne({
-          _id: req.params.id
-        }).then(
-          (comments) => {
-            arraylikes = comments.usersLiked; 
-            if (script.exitsUser(arraylikes,req.body.userId) == true ){
-            }else{
-            arraylikes = script.modifyArray(arraylikes,req.body.userId,'Add')
-            comment = {
-              _id: req.params.id,
-              likes: comments.likes+1,
-              usersLiked: arraylikes 
-            }; 
-            }
-            Comment.updateOne({_id: req.params.id}, comment).then(
-            () => {
-              res.status(201).json({
-                message: 'Sauce liked successfully!'
-              });
-            }
-          ).catch(
-            (error) => {
-              res.status(400).json({
-                message: 'Error'+error
-              });
-            }
-          );
-        
-        }).catch(
-          (error) => {
-              res.status(400).json(
-                  {
-                    message: error
-                  });
-          }
-      );
-    }
-    // Canceling Like or dislike
-      if (req.body.like == 0){
-        Comment.findOne({
-          _id: req.params.id
-        }).then(
-          (comments) => {
-            arraylikes = comments.usersLiked;
-            arrayDisliked = comments.usersDisliked;
-            if (script.exitsUser(arraylikes,req.body.userId) == true ){
-              arraylikes = comments.usersLiked;
-              arraylikes = script.modifyArray(arraylikes,req.body.userId,'Delete');
-              comment = {
-                _id: req.params.id,
-                likes: comments.likes-1,
-                usersLiked: arraylikes
-              };
-
-            }else{
-              //console.log("Doesn't exist");
-            }
-            if (script.exitsUser(arrayDisliked,req.body.userId) == true ){
-            arrayDisliked = comments.usersDisliked;
-            arrayDisliked = script.modifyArray(arrayDisliked,req.body.userId,'Delete');
-            comment = {
-                _id: req.params.id,
-                dislikes: comments.dislikes-1,
-                usersDisliked: arrayDisliked
-              };
-            }else{
-              //console.log("Doesn't  exist");
-            }
-            Comment.updateOne({_id: req.params.id}, comment).then(
-                () => {
-                  res.status(201).json({
-                    message: 'Sauce  disliked successfully!'
-                  });
-                }
-              ).catch(
-                (error) => {
-                  res.status(400).json({
-                    message: 'Error'+error
-                  });
-                }
-              );
-          }).catch(
-          (error) => {
-              res.status(400).json(
-                  {
-                    message: error
-                  });
-          }
-      );
-      }
-      // Dislike
-      if (req.body.like == -1){
-        Comment.findOne({
-          _id: req.params.id
-        }).then(
-          (comments) => {
-        arrayDisliked = comment.usersDisliked;
-        arrayDisliked = script.modifyArray(arrayDisliked,req.body.userId,'Add')
-        comment = {
-          _id: req.params.id,
-          dislikes: comments.dislikes+1,
-          usersDisliked: arrayDisliked
-          };
-          Comment.updateOne({_id: req.params.id}, comment).then(
-            () => {
-              res.status(201).json({
-                message: 'Sauce disliked successfully!'
-              });
-            }
-          ).catch(
-            (error) => {
-              res.status(400).json({
-                message: 'Error'+error
-              });
-            }
-          );
-          
-        }).catch(
-          (error) => {
-              res.status(400).json(
-                  {
-                    message: error
-                  });
-          }
-      );
-
-    }
-        
-    };
-  
-*/

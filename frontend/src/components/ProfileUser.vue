@@ -71,8 +71,6 @@ export default {
   },
   methods: {
     GetUser(){
-       console.log("this.user");
-        console.log(this.user.user);
         const user = this.user.user;
         let url = "http://localhost:3000/api/auth/user/"+user;  
         this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.user}})
@@ -80,12 +78,10 @@ export default {
           this.username = response.data.email;
           var user = response.data.email;
           this.mask =  user.replace(/^(.)(.*)(.@.*)$/,(_, a, b, c) => a + b.replace(/./g, '*') + c);
-
-response.data.email;
           this.firstname = response.data.firstname;
           this.lastname = response.data.lastname;
           this.phonenumber = response.data.phonenumber;
-          console.log(response);
+
           })
           .catch(error => {
             console.error(error);
@@ -98,53 +94,14 @@ response.data.email;
       let url = "http://localhost:3000/api/auth/deleteuser/"+user;
       let answer = document.getElementById("answer");
        this.$http.delete(url,{headers: {'Authorization': this.user.token}}).then(response => {
-            console.log(response);
-                     this.$router.push('/')
-                     answer.innerHTML = response.data.message;
+            this.$router.push('/')
+            answer.innerHTML = response.data.message;
             
           })
           .catch(error => {
             if(!error.response.data.message)
             answer.innerHTML = error.response.data.message;
           });
-      
-      /*let answer = document.getElementById("answer");
-      
-      if (this.password === "" && this.password_confirmation === "" && this.username ==="") {
-        this.password = ""
-        this.password_confirmation = ""
-        answer.innerHTML = "Please enter email and Passwords";
-      
-      }
-      else if (this.password === "" && this.password_confirmation === "" && this.username !="") {
-      
-        answer.innerHTML = "Please enter passwords";
-      }
-      else if (this.password === this.password_confirmation && this.password.length > 0) {
-        let url = "http://localhost:3000/api/auth/signup";
-        let data1 = {
-          email : this.username,
-          password : this.password,
-        }
-          
-        this.$http.post(url, data1)
-          .then(response => {
-            console.log(response);
-                     this.$router.push('/dashboard')
-                     answer.innerHTML = response.data.message;
-            
-          })
-          .catch(error => {
-            if(!error.response.data.message)
-            answer.innerHTML = error.response.data.message;
-          });
-      } 
-      
-      else {
-        this.password = ""
-        this.password_confirmation = ""
-        answer.innerHTML = "Passwords do not match";
-      }*/
     
     }
   },

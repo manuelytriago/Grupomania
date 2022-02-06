@@ -12,9 +12,6 @@
       <router-link  class="navbar-brand me-0" to="/dashboard">Grupomania</router-link> 
       <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <div class="navbar-nav ms-auto me-3 mb-2 mb-lg-0">
-          <!-- <li class="nav-item">
-            <router-link class="nav-link" v-if="!isdashboardPage()" to="/dashboard">{{user.id}}</router-link> 
-          </li> -->
           <li class="nav-item">
             <router-link @click="logout()" class="nav-link" v-if="!isdashboardPage()" to="/">Log out </router-link> 
           </li>
@@ -28,24 +25,10 @@
             <router-link class="nav-link" v-if="!isdashboardPage()" to="/profile"> Profile </router-link> 
           </li>
         </div>
-        <!--<form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>-->
       </div>
     </div>
   </nav>
   <router-view/>
-
-
-  <!-- <div id="app">
-    <div id="nav">
-      <router-link v-if="!isdashboardPage()" to="/">Log Out | </router-link> 
-      <router-link v-if="!isauth()" to="/"> Sign In |</router-link>
-      <router-link v-if="!isauth()" to="/signup"> Sign Up |</router-link> 
-      <router-link v-if="!isdashboardPage()" to="/profile"> Profile </router-link> 
-    </div>
-    <router-view/>-->
   </div> 
 </template>
 <script>

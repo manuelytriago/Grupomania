@@ -105,14 +105,12 @@ export default {
           .then(response => {
             answer.innerHTML = response.data;
             this.$store.commit('login',response); 
-             console.log("response in component",response);
              if(response.status === 201 ){
              this.$router.push('/dashboard')
              }
             
           })
           .catch(error => {
-            console.log(error.response.data.message)
             answer.innerHTML = error.response.data.message;
           });
       } 

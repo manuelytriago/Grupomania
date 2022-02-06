@@ -27,19 +27,7 @@ Vue.component('vue-phone-number-input', VuePhoneNumberInput);
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
-
 Vue.use(Vuelidate)
-/*Vue.use(Auth0Plugin, {
-  domain,
-  clientId,
-  onRedirectCallback: appState => {
-    router.push(
-      appState && appState.targetUrl
-        ? appState.targetUrl
-        : window.location.pathname
-    );
-  }
-});*/
 Vue.prototype.$http = base;
 Vue.config.productionTip = false
 new Vue({
