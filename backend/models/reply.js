@@ -32,7 +32,7 @@
       // Column-2, reply
       reply: { type: Sequelize.STRING, allowNull:false },
       // Column-3, Image
-      image: { type: Sequelize.STRING, allowNull:false },
+      image: { type: Sequelize.STRING, allowNull:true },
       // Column-4 Createion date, default values for
       // dates => current time
       myDate: { type: Sequelize.DATE,

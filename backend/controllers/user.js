@@ -113,8 +113,6 @@ let arrayTags = [];
                     try {
                         const user = await User.findOne({where: {idUser: req.body.userId}});
                         var conditional = user.dataValues.tag_posts;
-                        //console.log("conditional")    
-                        //console.log(conditional)
                         if (conditional === null){
                             console.log("conditional is null")   
                             arrayTags.push(JSON.stringify(req.body.postiD))
@@ -161,7 +159,6 @@ let arrayTags = [];
                             arrayTags.push(tags);
                             var value = JSON.parse(JSON.stringify(req.body.postiD))
                             arrayTags.push(value) ;
-                            //var newarray = JSON.stringify(arrayTags)
                             var newarray = arrayTags.toLocaleString();
                             const user2 = await User.update({ tag_posts: newarray }, {
                                 where: {

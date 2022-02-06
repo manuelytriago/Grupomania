@@ -20,141 +20,56 @@ exports.getAllComment = async(req, res, next) => {
     {
       type: QueryTypes.SELECT
     }); 
-   const usertags = await sequelize.query("SELECT u.tag_posts FROM [Users] u WHERE u.idUser = $idUser",
-   {
+    const usertags = await sequelize.query("SELECT u.tag_posts FROM [Users] u WHERE u.idUser = $idUser",
+    {
      bind: { idUser: req.params.id },
      type: QueryTypes.SELECT
-   });
+    });
    
     const replys = await sequelize.query('SELECT r.idReply,r.idCommentReply,r.idUser,r.reply,r.myDate,u.email,u.lastname,u.firstname FROM [replies] r INNER JOIN [Users] u on r.idUser = u.idUser',
     {
       type: QueryTypes.SELECT
-    }
-   );
+    });
    var comments2 = JSON.parse(JSON.stringify(comments));
    var replys2 = JSON.parse(JSON.stringify(replys))
    var user_tag2 = JSON.parse(JSON.stringify(usertags[0].tag_posts))
-  
+  console.log(replys2)
     for ( var i = 0 ; i < comments2.length ; i++){
-      
       for ( var j = 0 ; j < replys2.length ; j++){
-        if (comments2[i].idComment == replys2[j].idComment ){
-
+        console.log(replys2[j].idCommentReply)
+        if (comments2[i].idComment == replys2[j].idCommentReply ){
           if (comments2[i].replies == undefined){
-
           comments2[i].replies = [];
           comments2[i].replies.push(replys2[j]);
           }else{
             comments2[i].replies.push(replys2[j])
           }
-         
-          
         }  
       }
-
-      console.log(user_tag2)
-      var tags = user_tag2;
       var tags = JSON.parse(JSON.stringify(user_tag2))
       var post_condition = true;
-      console.log(tags)
       if (tags != null){
-        
       tags = tags.split(",");
         for ( var k = 0 ; k < tags.length ; k++){
-          //console.log("TAG position "+k)
-            //console.log(tags[k])
           if (comments2[i].idComment == tags[k]){
-            //console.log("TAG position "+k)
-            //console.log(tags[k])
           comments2[i].user_tag = true;
           k = tags.length;
           }else{
           comments2[i].user_tag = false;
           }
-
-
         }
-      }else{
-        
-  
       }
       
     }
-  
- //console.log(comments2)
-const data = {comments:comments2,reply:JSON.parse(JSON.stringify(replys)),user:JSON.parse(JSON.stringify(usertags))}
+  console.log(comments2)
+const data = {comments:comments2,reply:JSON.parse(JSON.stringify(replys2)),user:JSON.parse(JSON.stringify(user_tag2))}
         if(!comments2){
             return res.status(401).json({
-                message : 'Comment not found'
+                message : 'Comments not found'
             });
         }else{
-
           res.send(data)
         }
-    //const replies = await Comment.findAll({ where: { idUserComment: req.params.id } });
-       
-
-  /*const request = new sql.Request();
-  request.input('idUser', sql.Int, req.params.id)
-   // Get All Comment   
-    const allcomments = await request.query('(SELECT c.idComment,c.iduser,c.comment,c.image,c.video,c.date,u.email,u.lastname,u.firstname,r.total_replies FROM [comment] c RIGHT JOIN [user] u on c.idUser = u.idUser LEFT JOIN (SELECT COUNT(r.idReply) AS total_replies,idComment FROM [reply] r GROUP BY r.idComment) r on r.idComment = c.idComment) ORDER BY c.date DESC');
-   const allreplys = await request.query('SELECT r.idReply,r.idComment,r.idUser,r.reply,r.date,u.email,u.lastname,u.firstname FROM [reply] r INNER JOIN [user] u on r.idUser = u.idUser');
-   const user_tag = await request.query('SELECT tag_posts FROM [user] WHERE idUser = @idUser');
-   const comments = allcomments;
-    const replys = allreplys;
-    var comments2 = comments.recordset;
-    var replys2 = replys.recordset;
-    var user_tag2 = user_tag.recordset;
-
-    for ( var i = 0 ; i < comments2.length ; i++){
-      
-      for ( var j = 0 ; j < replys2.length ; j++){
-        if (comments2[i].idComment == replys2[j].idComment ){
-
-          if (comments2[i].replies == undefined){
-
-          comments2[i].replies = [];
-          comments2[i].replies.push(replys2[j]);
-          }else{
-            comments2[i].replies.push(replys2[j])
-          }
-         
-          
-        }  
-      }
-      var tags = JSON.parse(JSON.stringify(user_tag.recordsets[0][0].tag_posts));
-   
-      if (tags != null){
-        
-        for ( var k = 0 ; k < tags.length ; k++){
-          //console.log("TAG position "+k)
-           // console.log(tags[k])
-          if (comments2[i].idComment == tags[k]){
-           // console.log("TAG position "+k)
-            //console.log(tags[k])
-          comments2[i].user_tag = true;
-          k = tags.length;
-          }else{
-          comments2[i].user_tag = false;
-          }
-
-
-        }
-      }else{
-        
-  
-      }
-      
-    }
-    const data = {comments:comments.recordset,reply:replys.recordset,user:user_tag.recordset}
-    if (comments.rowsAffected >= 1) {
-          res.send(data)
-    } else {
-    res.status(500).json({
-        message: "No posts"
-    });
-  }*/
-
   } catch (error) {
     next(error);
   }
@@ -164,26 +79,11 @@ const data = {comments:comments2,reply:JSON.parse(JSON.stringify(replys)),user:J
 exports.createComment = async(req, res, next) => {
   const url = req.protocol+'://'+req.get('host')
   req.body = JSON.parse(req.body.body)
-  //console.log(req.body)
-      // Create a Comment
       if (req.file) {
       const url = req.protocol+'://'+req.get('host');
       arrayImages += req.body.imageUrl;
-      //req.body = JSON.parse(req.body.body);
-      //console.log(req.file);
-      //var actual_date = new Date().toLocaleTimeString()
       var date = new Date();
       var actual_date = new Date(date.getTime() - date.getTimezoneOffset()*60000).toISOString();
-    
-      /*var fecha = (actual_date.getMonth()+1) + '-' + ( actual_date.getDate() ) + '-' + actual_date.getFullYear() + " "+ (actual_date.getHours()-5) + ':' + actual_date.getMinutes();
-*/ 
-      /*const comment = new Comment({
-        idUserComment:req.body.userId,
-        comment: req.body.comment,
-        image: "",
-        video: "",
-        date: actual_date
-      });*/
       if (req.file.mimetype == 'video/mp4'){
         const comment = await Comment.create({ 
           idUserComment:req.body.userId,
@@ -206,34 +106,9 @@ exports.createComment = async(req, res, next) => {
             message: comment
           })
       }
-    
-      /*comment.save().then(
-        (data) => {
-          console.log("data post saved")
-          console.log(data)
-          res.status(201).json({
-            message: 'comment posted successfully'
-          })
-        }
-      ).catch(
-          (error) => {
-            res.status(500).json({
-              message: "Comment was not created"
-          });
-          }
-      )*/
       }else {
-        /*.log(req.body)
-        console.log(req.body.userId)
-        console.log(req.body.comment)
-*/
-       
-
         var date = new Date();
         var actual_date = new Date(date.getTime() - date.getTimezoneOffset()*60000).toISOString();
-        //console.log(date)
-        /*var fecha = (actual_date.getMonth()+1) + '-' + ( actual_date.getDate() ) + '-' + actual_date.getFullYear() + " "+ (actual_date.getHours()-5) + ':' + actual_date.getMinutes();
-  */ 
         const comment = await Comment.create({ 
           idUserComment:req.body.userId,
           comment: req.body.comment,
@@ -241,58 +116,7 @@ exports.createComment = async(req, res, next) => {
           res.status(201).json({
             message: comment
           })
-        /*const comment = new Comment({
-          idUserComment:req.body.userId,
-          comment: req.body.comment,
-          date: actual_date
-        });
-        comment.save().then(
-          () => {
-            res.status(201).json({
-              message: 'comment posted successfully'
-            })
-          }
-        ).catch(
-            (error) => {
-              console.log(error)
-              res.status(500).json({
-                message: error
-            });
-            }
-        )  */
-
-
-
-      /*var actual_date = new Date();
-      var fecha = (actual_date.getMonth()+1) + '-' + ( actual_date.getDate() ) + '-' + actual_date.getFullYear();
-      const request = new sql.Request();
-      request.input('idUser', sql.NVarChar, req.body.userId)
-      request.input('comment', sql.NVarChar, req.body.comment)
-      //request.input('image', sql.NVarChar,   '/../../assets/'+req.file.filename)
-      //request.input('video', sql.NVarChar,  '/../../assets/'+req.file.filename)
-      request.input('date', sql.Date , fecha)
-
-      // Save Comment in the database
-      const dataset = await request.query(
-          'INSERT INTO [comment] (idUser,comment,date) VALUES (@idUser,@comment,@date)');
-          const user = dataset;
-         // console.log("dataset")
-         // console.log(dataset)
-      if (user.rowsAffected == 1) {
-        res.status(201).json({
-          message: 'comment posted successfully'
-        })
-      } else {
-
-         // console.log("dataset")
-         // console.log(dataset)
-          res.status(500).json({
-              message: "User was not created"
-          });
-      }*/
-
       }
-      
 }
 
 /* FUNCTION TO GET A COMMENT*/
@@ -314,7 +138,8 @@ exports.getOneComment =  async (req, res, next) => {
    var replys2 = JSON.parse(JSON.stringify(getallreplys))
     for ( var i = 0 ; i < comments2.length ; i++){
       for ( var j = 0 ; j < replys2.length ; j++){
-        if (comments2[i].idComment == replys2[j].idComment ){
+    
+        if (comments2[i].idComment == replys2[j].idCommentReply ){
           if (comments2[i].replies == undefined){
           comments2[i].replies = [];
           comments2[i].replies.push(replys2[j]);
@@ -325,7 +150,8 @@ exports.getOneComment =  async (req, res, next) => {
           
         }  
       }
-      const data = {comments:JSON.parse(JSON.stringify(getcomment)),reply:JSON.parse(JSON.stringify(getallreplys))}
+      console.log(comments2)
+      const data = {comments:comments2,reply:JSON.parse(JSON.stringify(replys2))}
       res.send(data)
     }
   } catch (error) {
@@ -333,7 +159,7 @@ exports.getOneComment =  async (req, res, next) => {
   }
 }
 
-/* FUNCTION TO CREATE A COMMENT DONE 
+/* FUNCTION TO MODIFY A COMMENT DONE 
 exports.modifyComment = (req, res, next) => {
         let comment = new Comment({ _id: req.params._id });
         if (req.file) {

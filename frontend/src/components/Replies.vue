@@ -97,11 +97,11 @@
             </div>
           </div>
           <div v-if="replyresponse" id="replies" class="col-12 d-flex mt-2 mb-2 me-2">
-            <div :id="'show'+postsdata.idComment" class="border border-primary col-12" >
+            <div :id="'show'+postsdata.idComment" class="d-none border border-primary col-12" >
+    
+                <div v-for="replys in postsdata.replies" :key="replys.idReply" class=" border border-primary col-12" >
 
-                <div v-for="replys in postsdata.replies" :key="replys.id" class=" border border-primary col-12" >
-
-                  <p  v-if="postsdata.idComment == replys.idComment"  class="border border-primary text-start col-12">
+                  <p  v-if="postsdata.idComment == replys.idCommentReply"  class="border border-primary text-start col-12">
                     {{replys.reply}}
                 </p>
 
@@ -251,24 +251,22 @@ export default {
     
     },
     reply (idComment) {    
-      console.log("this.multimedia")
-      console.log(this.multimedia)
-     const comment = document.getElementById(idComment).value;
+     const comment = this.replyComment
      if(comment != ''){
         let url = "/Reply";
         let data1 = {
+          userId: this.user.id,
           id: this.user.id,
           idComment: idComment,
-          reply: this.replytext[idComment]
+          reply: comment
         }
         const formData = new FormData();
         formData.append("body", JSON.stringify(data1));
-        this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.user}}).then(response => {
+        this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.clear()
           console.log("response in component",response);
-          })
-          .catch(error => {
-            console.error(error);
+          }).catch(error => {
+            console.error(error.message);
           });
      }else{
        document.getElementById(idComment).placeholder = "Please write something down to post"
@@ -368,6 +366,7 @@ export default {
       this.video = null,
       this.multimedia = null,
       this.replytext = ""
+      this.replyComment = ""
     }
   },
 }

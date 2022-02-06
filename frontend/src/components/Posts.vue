@@ -40,7 +40,7 @@
               </p>  
             </div>
           </div>
-          <div v-if="(replyresponse===null||replyresponse)" id="comments_actions" class="col-12 d-flex mt-2 mb-2 me-2">
+          <div id="comments_actions" class="col-12 d-flex mt-2 mb-2 me-2">
             <div id="comments" class="border-primary col-xl-12 d-flex flex-row">
               <a class="navbar-brand me-2 pt-0 pb-0" href="#">
                 <img :src="require('../../../assets/comment.webp')" class="img-fluid" alt="" width="25" height="25">
@@ -236,48 +236,29 @@ export default {
     },
   
     show (postdata) {
-      console.log("sending this post to be add")
         this.addPost(this.user.id,postdata.idComment)
         this.$store.commit('comment',postdata.idComment);
-        this.$router.push({path:'/replies/',params:{postinfo: postdata}})
-     
-     /* var display = document.getElementById('show'+postdata.idComment);
-
-    if(display.classList.contains('d-none')){
-      console.log("entre block")
-      display.classList.remove('d-none');
-      display.classList.add('d-block');
-    }else{
-  
-      display.classList.remove('d-block');
-      display.classList.add('d-none');
-    }*/
-    
+        this.$router.push({path:'/replies/',params:{postinfo: postdata}})    
     },
+
     reply (idComment) {    
-      /*console.log("this.multimedia")
-      console.log(this.multimedia)*/
      const comment = document.getElementById(idComment).value;
      if(comment != ''){
         let url = "/Reply";
         let data1 = {
-          userId: this.user.user,
+          userId: this.user.id,
           id: this.user.id,
           idComment: idComment,
-          reply: this.replytext[idComment]
+          reply: comment
         }
-        /*const options = {
-        headers: {'Authorization':this.user.token}
-        };*/
         const formData = new FormData();
         formData.append("body", JSON.stringify(data1));
         this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.clear()
           console.log("response in component",response);
-          })
-          .catch(error => {
-            console.error(error);
-          });
+        }).catch(error => {
+            console.error(error.message);
+        });
      }else{
        document.getElementById(idComment).placeholder = "Please write something down to post"
        
@@ -366,8 +347,7 @@ export default {
         if (document.getElementById("image")){
           const picture1 = document.getElementById('image');
             images.removeChild(picture1);
-        }
-        
+        } 
       }
       this.username = "",
       this.password = "",
@@ -375,7 +355,7 @@ export default {
       this.image = null,
       this.video = null,
       this.multimedia = null,
-      this.replytext = ""
+      this.replytext = []
     }
   },
 }
