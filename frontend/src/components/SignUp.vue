@@ -14,15 +14,16 @@
       <label for="floatingInput">Email address</label>
     </div>
      <div class="form-floating">
-      <input type="text" class="form-control text-uppercase" id="floatingInput" placeholder="name@example.com" v-model="formdata.firstname" required>
+      <input type="text" class="form-control text-uppercase" id="floatingInput" placeholder="Victor" v-model="formdata.firstname" required>
       <label for="floatingInput">First Name</label>
     </div>
      <div class="form-floating">
-      <input type="text" class="form-control text-uppercase" id="floatingInput" placeholder="name@example.com" v-model="formdata.lastname" required>
+      <input type="text" class="form-control text-uppercase" id="floatingInput" placeholder="Salazar" v-model="formdata.lastname" required>
       <label for="floatingInput">Last Name</label>
     </div>
     <div class="form-floating">
-      <VuePhoneNumberInput v-model="formdata.phone" required/>
+       <input  type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" class="form-control text-uppercase"  placeholder="111-1111111" v-model="formdata.phone" required>
+      <label for="tel">Phone Number</label>
     </div>
     <div class="form-floating">
       <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="formdata.password" required>
@@ -51,12 +52,12 @@
 </template>
 
 <script>
-
-import VuePhoneNumberInput from 'vue-phone-number-input';
+//import { VueTelInput } from 'vue3-tel-input'
+//import 'vue3-tel-input/dist/vue3-tel-input.css'
 import { mapState } from "vuex";
 //import axios from "axios";
 export default {
-  components: { VuePhoneNumberInput },
+  //components: { VueTelInput },
   name: 'SaveUser',
    data() {
     return {
@@ -65,10 +66,10 @@ export default {
       password: "",
       firstname:"",
       lastname:"",
-      phone:"",
       password_confirmation: "",
+      phone: ""
     },
-     answer:""
+     answer:"",
     };
   },
   props: {
@@ -80,7 +81,9 @@ export default {
     })
   },
   methods: {
-    submit(){  
+    submit(){ 
+      console.log("this.formdata") 
+      console.log(this.formdata.phone)
     let answer = document.getElementById("answer");
       if (this.formdata.password === "" && this.formdata.password_confirmation === "" && this.formdata.username ==="") {
         this.formdata.password = ""

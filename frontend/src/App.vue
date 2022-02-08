@@ -1,6 +1,5 @@
 <template>
-
-<div id="app">
+<div>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand me-0" href="/dashboard">
@@ -36,7 +35,7 @@
 import { mapState } from "vuex";
 
   export default {
-    name: 'LogoutButton',
+    name: 'App',
     computed: {
     ...mapState({
       user: (state) => state.user

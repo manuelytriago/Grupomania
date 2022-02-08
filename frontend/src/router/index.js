@@ -1,12 +1,13 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+//import VueRouter from 'vue-router'
 //import SignIn from '../views/SignIn.vue'
+
+//import Vue from './../App.vue'
+import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 //import store from "../auth/store"
 import SignIn from "../views/SignIn"
 import Profile from "../views/Profile"
 import store from "../auth/store"
-Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
@@ -43,9 +44,9 @@ const routes = [
   }
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
   routes
 })
 

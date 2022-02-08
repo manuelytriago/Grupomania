@@ -1,7 +1,7 @@
 <template>
 
     <div v-if="posts_shared" id="posts" class="me-5 ms-5 col margin_half" >
-      <div :class="postsdata.user_tag == true? 'background_read' : 'background_not_read'" @mouseover="/*addPost(user.id,postsdata.idComment)*/" v-for="postsdata in posts_shared" :key="postsdata.idComment" :id="'posts'+postsdata.idComment" class="border border-3 rounded col-12 mt-sm-3 mb-sm-3 mt-2 mb-2 me-xl-0 ms-xl-0">
+      <div :class="postsdata.user_tag == true? 'background_read' : 'background_not_read'" v-for="postsdata in posts_shared" :key="postsdata.idComment" :id="'posts'+postsdata.idComment" class="border border-3 rounded col-12 mt-sm-3 mb-sm-3 mt-2 mb-2 me-xl-0 ms-xl-0">
          <div id="posts_information" class="d-inline-flex col-12 mt-sm-3">
             <div class="d-inline-flex flex-row text-start mb-0 col-12">
               <p class="flex-fill fs-4 fw-bolder">
@@ -65,28 +65,8 @@
 
                 </div>
             </div>
-            <!--<div id="replytext" class="border border-primary col-10">
-              <input type="text" :id="postsdata.idComment" class=" form-control w-100 h-100" placeholder="WRITE YOUR REPLY" v-model="replytext[postsdata.idComment]" required>
-            </div>
-          <a href="#">
-              Share
-            </a> -->
+           
           </div>
-          <!--<div id="post_actions" class="col-12 d-flex mt-2 mb-2 me-2">
-            <div id="reply" class="border border-primary col-1 col-sm-2 ps-0 pe-0 col-lg-2 col-xl-2 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 ">
-              <a href="#" :id="'button'+postsdata.idComment" @click="reply(postsdata.idComment)" class="navbar-brand me-0 pt-0 pb-0">
-               Reply Post
-              </a>
-            </div>
-            <div id="replytext" class="border border-primary col-11 col-sm-10 ps-0 pe-0 col-lg-10 col-xl-10 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 ">
-              <input type="text" :id="postsdata.idComment" class=" form-control w-100 h-100" placeholder="WRITE YOUR REPLY" v-model="replytext[postsdata.idComment]" required>
-            </div>
-           <a href="#">
-              Share
-            </a> 
-          </div> -->
-
-
       </div> 
            <p class="mt-5 mb-3 alert-danger" id="answer"></p>
     </div>

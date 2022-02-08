@@ -16,12 +16,12 @@
   </div>
   <div class="col-md-6">
     <label for="validationDefault02" class="form-label">Email address</label>
-      <input type="email" class="form-control" id="floatingInput" v-model="username" v-mask="mask">
+      <input type="email" class="form-control" id="floatingInput" v-model="username" v-maska="mask">
   </div>
   <div class="col-md-6">
      <label for="validationDefault02" class="form-label">Phone Number</label>
     <div class="form-floating">
-      <VuePhoneNumberInput v-model="phonenumber" />
+       <VueTelInput v-model="phonenumber"></VueTelInput>
     </div>
   </div>
   <div class="col-12">
@@ -45,11 +45,12 @@
 </template>
 
 <script>
-import VuePhoneNumberInput from 'vue-phone-number-input';
+import { VueTelInput } from 'vue3-tel-input'
+import 'vue3-tel-input/dist/vue3-tel-input.css'
 import { mapState } from "vuex";
 //import axios from "axios";
 export default {
-   components: { VuePhoneNumberInput },
+   components: { VueTelInput },
   name: 'SaveUser',
    data() {
     return {
