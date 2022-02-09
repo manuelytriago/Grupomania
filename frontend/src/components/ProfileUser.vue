@@ -16,13 +16,11 @@
   </div>
   <div class="col-md-6">
     <label for="validationDefault02" class="form-label">Email address</label>
-      <input type="email" class="form-control" id="floatingInput" v-model="username" v-maska="mask">
+      <input type="email" class="form-control" id="floatingInput" v-model="mask" >
   </div>
   <div class="col-md-6">
      <label for="validationDefault02" class="form-label">Phone Number</label>
-    <div class="form-floating">
-       <VueTelInput v-model="phonenumber"></VueTelInput>
-    </div>
+     <input  type="tel" class="form-control" id="floatingInput" placeholder="(111) 111-1111" v-model="phonenumber" required>
   </div>
   <div class="col-12">
     <div class="form-check">
@@ -78,11 +76,10 @@ export default {
         .then(response => {
           this.username = response.data.email;
           var user = response.data.email;
-          this.mask =  user.replace(/^(.)(.*)(.@.*)$/,(_, a, b, c) => a + b.replace(/./g, '*') + c);
+          this.mask =  user.replace(/^(.)(.*)(.com.*)$/,(_, a, b, c) => a + b.replace(/./g, '*') + c);
           this.firstname = response.data.firstname;
           this.lastname = response.data.lastname;
           this.phonenumber = response.data.phonenumber;
-
           })
           .catch(error => {
             console.error(error);

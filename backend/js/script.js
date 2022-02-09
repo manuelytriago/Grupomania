@@ -1,13 +1,15 @@
 // Function to check password security
 let checkPassword = function(inputtxt) { 
     // Password more than 6 and less thatn 20 caracteres
-    var passw = /(\d{6,20})/g;
+    
+    var passw = /^(.{6,20}[a-z])/g;
     // Password must contain a number
     var passw1 = /^(?=.*\d)/g;
     // Password must contain at least 1 lower letter
     var passw2 = /^(?=.*[a-z])/g;
     // Password must contain at least 1 capital letter
     var passw3 = /^(?=.*[A-Z])/g;
+                
 
     var arr = {conditional : false , message : "You password must have " };
     const concidence = inputtxt.match(passw);
@@ -22,7 +24,7 @@ let checkPassword = function(inputtxt) {
         }
         if(!concidence) 
         { 
-        arr.message += " more than 6 and less than 20 caracteres";
+        arr.message += " more than 6 and less than 20 caracteres"; 
         }
         if(!concidence1) 
         { 
@@ -32,7 +34,7 @@ let checkPassword = function(inputtxt) {
         {
         arr.message += " 1 minusculas";
         }
-        if(!concidence2) {
+        if(!concidence3) {
         arr.message += " 1 mayusculas";
         }
         return arr;

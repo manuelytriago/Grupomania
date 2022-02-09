@@ -6,6 +6,7 @@
   // Database connection pool managed by Sequelize.
   const sequelize = require('../config/db.config2')
 
+  const Comment =  require('../models/comment');
   // Define method takes two arguments
   // 1st - name of table
   // 2nd - columns inside the table
@@ -39,7 +40,7 @@
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
   })
-  
+    
   // Exporting User, using this constant
   // we can perform CRUD operations on
   // 'user' table.
