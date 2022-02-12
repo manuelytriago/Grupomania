@@ -1,5 +1,7 @@
 # frontend
 
+## Engine must be >=8 <16
+
 ## Project setup
 ```
 npm install

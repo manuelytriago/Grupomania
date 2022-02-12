@@ -135,11 +135,19 @@ export default {
       return datestring;
       },
     dataPosts(){    
+      console.log("UPDATING POST SHARED IN POST")
       let url = "/comment/"+this.user.id;
         this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
-          this.posts = JSON.parse(JSON.stringify(response.data.comments));
+           this.$emit("updatePosts", JSON.parse(JSON.stringify(response.data.comments)))
           this.replyresponse = JSON.parse(JSON.stringify(response.data.reply));
           this.user_tag = JSON.parse(JSON.stringify(response.data.user));
+          console.log("UPDATING POST SHARED IN POST")
+              console.log("this.posts_shared")
+              console.log(this.posts_shared)
+              console.log("this.replyresponse")
+              console.log(this.replyresponse)
+              console.log("this.user_tag")
+              console.log(this.user_tag)
           })
           .catch(error => {
             console.error(error);
@@ -215,6 +223,7 @@ export default {
         const formData = new FormData();
         formData.append("body", JSON.stringify(data1));
         this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
+          this.dataPosts();
           this.clear()
          let answer = document.getElementById("answer");
           if(response.status == 201){

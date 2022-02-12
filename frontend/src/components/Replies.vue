@@ -21,7 +21,7 @@
         </a>
       </div>
       <div id="comment" class="border border-primary col-6 col-sm-9 ps-0 pe-0 col-lg-9 col-xl-9 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 ">
-        <input type="text" class=" form-control w-100 h-100" id="comment1" placeholder="WRITE YOUR REPLY" v-model="replyComment" required>
+        <input type="text" class=" form-control w-100 h-100" id="reply" placeholder="WRITE YOUR REPLY" v-model="replyComment" required>
       </div>
       <div id="post" @click="reply(idcomment)"  class="d-flex align-items-center justify-content-center border border-primary col-2 col-sm-1 col-lg-1 col-xl-1 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 "> 
         <div class="">
@@ -241,7 +241,7 @@ export default {
     
     },
     reply (idComment) {    
-     const comment = document.getElementById(idComment).value;
+     const comment = document.getElementById("reply").value;
      if(comment != ''){
         let url = "/Reply";
         let data1 = {
@@ -254,6 +254,8 @@ export default {
         formData.append("body", JSON.stringify(data1));
         this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.clear()
+          this.idcomment = this.user.idComment;
+          this.getPostsReplies(this.idcomment);
           let answer = document.getElementById("answer");
           if(response.status == 201){
           answer.innerHTML = "Reply created"

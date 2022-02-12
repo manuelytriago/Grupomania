@@ -2,7 +2,7 @@
 let checkPassword = function(inputtxt) { 
     // Password more than 6 and less thatn 20 caracteres
     
-    var passw = /^(.{6,20}[a-z])/g;
+    var passw = /^(.{6,20})/g;
     // Password must contain a number
     var passw1 = /^(?=.*\d)/g;
     // Password must contain at least 1 lower letter
@@ -32,10 +32,10 @@ let checkPassword = function(inputtxt) {
         }
         if(!concidence2) 
         {
-        arr.message += " 1 minusculas";
+        arr.message += " 1 lower letter";
         }
         if(!concidence3) {
-        arr.message += " 1 mayusculas";
+        arr.message += " 1 capital letter";
         }
         return arr;
 }

@@ -38,13 +38,15 @@
     </div>
 
         <div v-if="posts.length" id="posts" class="border row-cols-lg-2 me-5 ms-5 col">
-          <All :posts_shared="posts"/>
+          <All  v-on:updatePosts="updateparent" :posts_shared="posts"/>
         </div>
       </div>
 
   </div>
 </template>
+
 <script>
+
 // @ is an alias to /src
 //import Home from '@/components/Home.vue'
 import All from  '@/components/Posts.vue'
@@ -83,6 +85,9 @@ export default {
     },
 
   methods: {
+    updateparent(post) {
+        this.posts = post
+    },
     commentcount(id){
       var cont = 0;
 
@@ -163,7 +168,7 @@ export default {
         this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.addPost(response.data.message.idUserComment,response.data.message.idComment)
           this.clear()
-           this.dataPosts();
+          this.dataPosts();
           })
           .catch(error => {
             console.error(error);

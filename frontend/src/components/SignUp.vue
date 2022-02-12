@@ -22,7 +22,7 @@
       <label for="floatingInput">Last Name</label>
     </div>
     <div class="form-floating">
-       <input  type="tel" id="phone" name="phone" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" class="form-control text-uppercase"  placeholder="111-1111111" v-model="formdata.phone" required>
+       <input  type="tel" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" class="form-control text-uppercase"  placeholder="111-1111111" v-model="formdata.phone" required>
       <label for="tel">Phone Number</label>
     </div>
     <div class="form-floating">
