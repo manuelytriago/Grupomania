@@ -1,7 +1,7 @@
 <template>
-  <div class="home">
+  <div id="main" class="bg-secondary bg-gradient">
     <!-- <img alt="Vue logo" src="../assets/icon.png">-->
-    <LogIn msg="Welcome to Your Grupomania Network"/>
+    <LogIn msg="Welcome to Your Social Network"/>
   
   </div>
 </template>
@@ -17,3 +17,15 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+}
+
+#main {
+    height: 100%;
+}
+</style>

@@ -14,11 +14,18 @@ const { QueryTypes } = require('sequelize');
 /* FUNCTION TO SIGNUP A USER DONE!!*/
 exports.signup = async (req, res, next) => { 
     const value = script.checkPassword(req.body.password);
+    let user ;
     if(value.conditional == true){
         try { 
             const hash = await bcrypt.hash(req.body.password,10);
+            try {
+                user = await User.findOne({ where: { email: req.body.email } });
+            } catch (error) {
+                return res.status(402).json({message: "Somethin went wrong"});
+            }
+            if(!user){
                 try {
-                    const user = new User({
+                    user = new User({
                     email: req.body.email,
                     lastname: req.body.lastname,
                     firstname: req.body.firstname,
@@ -27,14 +34,20 @@ exports.signup = async (req, res, next) => {
                     });
                     const user2 = await user.save();
                     const token = jwtoken.sign({userId: user.idUser},'RANDOM_TOKEN_SECRET',{ expiresIn: '24H'});
-                                    res.status(201).json({email: user.email,userId: user.idUser,token: token});
+                                    res.status(201).json({email: user.email,userId: user.idUser,token: token,firstname:user.firstname,lastname:user.lastname});
                     }catch (error) {
-                        if (error.number == 2627){
-                        res.status(500).json({message: "Something went wrong"});
-                    }
-                            } 
+       
+                        res.status(500).json({message: error});
+                    
+                    } 
+
+            }else{
+                return res.status(402).json({
+                message: "Email already register please change the email"
+                });
+            }
         } catch (error) {
-                next(error);
+                res.status(500).json({message: "error"});
         }
     }else{
         res.status(500).json({message: value.message})
@@ -58,7 +71,7 @@ exports.login = async (req, res, next) => {
                 return res.status(401).json({ message: "Password Incorrect"});
             }else{
                 const token = jwtoken.sign({userId: user.idUser},'RANDOM_TOKEN_SECRET',{ expiresIn: '24H'});
-                res.status(201).json({email: user.email,userId: user.idUser,token: token});
+                res.status(201).json({email: user.email,userId: user.idUser,token: token,firstname:user.firstname,lastname:user.lastname});
             }
         } catch (error) {
             return res.status(401).json({

@@ -15,17 +15,17 @@ let arrayVideos = [];
 /* FUNCTION TO GET ALL COMMENTS DONE*/
 exports.getAllComment = async(req, res, next) => {
   try {
-    const comments = await sequelize.query('(SELECT c.idComment,c.idUserComment,c.comment,c.image,c.video,c.myDate,u.email,u.lastname,u.firstname,r.total_replies FROM [Comments] c LEFT JOIN [Users] u on c.idUserComment = u.idUser LEFT JOIN (SELECT COUNT(r.idReply) AS total_replies,idCommentReply FROM [Replies] r GROUP BY r.idCommentReply) r on r.idCommentReply = c.idComment) ORDER BY c.myDate DESC',
+    const comments = await sequelize.query('(SELECT c.idComment,c.idUserComment,c.comment,c.image,c.video,c.myDate,u.email,u.lastname,u.firstname,r.total_replies FROM Comments c LEFT JOIN Users u on c.idUserComment = u.idUser LEFT JOIN (SELECT COUNT(r.idReply) AS total_replies,idCommentReply FROM Replies r GROUP BY r.idCommentReply) r on r.idCommentReply = c.idComment) ORDER BY c.myDate DESC',
     {
       type: QueryTypes.SELECT
     }); 
-    const usertags = await sequelize.query("SELECT u.tag_posts FROM [Users] u WHERE u.idUser = $idUser",
+    const usertags = await sequelize.query("SELECT u.tag_posts FROM Users u WHERE u.idUser = $idUser",
     {
      bind: { idUser: req.params.id },
      type: QueryTypes.SELECT
     });
    
-    const replys = await sequelize.query('SELECT r.idReply,r.idCommentReply,r.idUser,r.reply,r.myDate,u.email,u.lastname,u.firstname FROM [replies] r INNER JOIN [Users] u on r.idUser = u.idUser',
+    const replys = await sequelize.query('SELECT r.idReply,r.idCommentReply,r.idUser,r.reply,r.myDate,u.email,u.lastname,u.firstname FROM Replies r INNER JOIN Users u on r.idUser = u.idUser',
     {
       type: QueryTypes.SELECT
     });
@@ -45,6 +45,7 @@ exports.getAllComment = async(req, res, next) => {
       }
       var tags = JSON.parse(JSON.stringify(user_tag2))
       var post_condition = true;
+      
       if (tags != null){
       tags = tags.split(",");
         for ( var k = 0 ; k < tags.length ; k++){
@@ -58,7 +59,7 @@ exports.getAllComment = async(req, res, next) => {
       }
       
     }
-const data = {comments:comments2,reply:JSON.parse(JSON.stringify(replys2)),user:JSON.parse(JSON.stringify(user_tag2))}
+const data = {comments:comments2,reply:replys2,user:tags}
         if(!comments2){
             return res.status(401).json({
                 message : 'Comments not found'
@@ -118,12 +119,12 @@ exports.createComment = async(req, res, next) => {
 /* FUNCTION TO GET A COMMENT*/
 exports.getOneComment =  async (req, res, next) => {
   try {
-    const getcomment = await sequelize.query('(SELECT c.idComment,c.idUserComment,c.comment,c.image,c.video,c.myDate,u.email,u.lastname,u.firstname,r.total_replies FROM [Comments] c LEFT JOIN [Users] u on c.idUserComment = u.idUser LEFT JOIN (SELECT COUNT(r.idReply) AS total_replies,idCommentReply FROM [replies] r GROUP BY r.idCommentReply) r on r.idCommentReply = c.idComment WHERE c.idComment = $idComment ) ORDER BY c.myDate DESC ',
+    const getcomment = await sequelize.query('(SELECT c.idComment,c.idUserComment,c.comment,c.image,c.video,c.myDate,u.email,u.lastname,u.firstname,r.total_replies FROM Comments c LEFT JOIN Users u on c.idUserComment = u.idUser LEFT JOIN (SELECT COUNT(r.idReply) AS total_replies,idCommentReply FROM Replies r GROUP BY r.idCommentReply) r on r.idCommentReply = c.idComment WHERE c.idComment = $idComment ) ORDER BY c.myDate DESC ',
    {
      bind: { idComment: req.params.idComment },
      type: QueryTypes.SELECT
    });
-   const getallreplys = await sequelize.query('SELECT r.idReply,r.idCommentReply,r.idUser,r.reply,r.myDate,u.email,u.lastname,u.firstname FROM [replies] r INNER JOIN [Users] u on r.idUser = u.idUser WHERE r.idCommentReply = $idComment',
+   const getallreplys = await sequelize.query('SELECT r.idReply,r.idCommentReply,r.idUser,r.reply,r.myDate,u.email,u.lastname,u.firstname FROM Replies r INNER JOIN Users u on r.idUser = u.idUser WHERE r.idCommentReply = $idComment',
    {
      bind: { idComment: req.params.idComment },
      type: QueryTypes.SELECT

@@ -1,11 +1,10 @@
 <template>
-
     <div v-if="posts_shared" id="posts" class="me-5 ms-5 col margin_half" >
       <div :class="postsdata.user_tag == true? 'background_read' : 'background_not_read'" v-for="postsdata in posts_shared" :key="postsdata.idComment" :id="'posts'+postsdata.idComment" class="border border-3 rounded col-12 mt-sm-3 mb-sm-3 mt-2 mb-2 me-xl-0 ms-xl-0">
          <div id="posts_information" class="d-inline-flex col-12 mt-sm-3">
             <div class="d-inline-flex flex-row text-start mb-0 col-12">
               <p class="flex-fill fs-4 fw-bolder">
-              Post made by {{postsdata.firstname}} {{postsdata.lastname}} on {{commentdate(postsdata.myDate)}}
+              Posted by {{postsdata.firstname}} {{postsdata.lastname}} on {{commentdate(postsdata.myDate)}}
               </p> 
               <p :class="postsdata.user_tag == true? 'post_read' : 'post_not_read'" class="text-uppercase">
               </p>
@@ -98,6 +97,10 @@ export default {
     posts_shared: {
       type: Array,
       required: true
+    },
+    posts_tags: {
+      type: Array,
+      required: true
     }
   },
    computed: {
@@ -106,6 +109,24 @@ export default {
     })
   },
     mounted(){
+      
+      if( this.posts_shared != null){
+        var countComment = this.posts_shared.length;
+        
+        if (this.posts_tags != null){
+        var countTags = this.posts_tags.length;
+        var postsUnread = countComment - countTags;
+        this.$store.commit('unread',postsUnread); 
+        }else{
+        this.$store.commit('unread',countComment); 
+        }
+      } else {
+        this.$store.commit('unread', NULL);
+
+      }
+
+
+
     },
 
   methods: {
@@ -139,15 +160,9 @@ export default {
       let url = "/comment/"+this.user.id;
         this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
            this.$emit("updatePosts", JSON.parse(JSON.stringify(response.data.comments)))
+          //this.posts = JSON.parse(JSON.stringify(response.data.comments));
           this.replyresponse = JSON.parse(JSON.stringify(response.data.reply));
           this.user_tag = JSON.parse(JSON.stringify(response.data.user));
-          console.log("UPDATING POST SHARED IN POST")
-              console.log("this.posts_shared")
-              console.log(this.posts_shared)
-              console.log("this.replyresponse")
-              console.log(this.replyresponse)
-              console.log("this.user_tag")
-              console.log(this.user_tag)
           })
           .catch(error => {
             console.error(error);
@@ -205,6 +220,7 @@ export default {
     },
   
     show (postdata) {
+        this.$store.commit('unread',this.user.postsUnread-1); 
         this.addPost(this.user.id,postdata.idComment)
         this.$store.commit('comment',postdata.idComment);
         this.$router.push({path:'/replies/',params:{postinfo: postdata}})    
@@ -422,9 +438,9 @@ background-color: #f1eeed;
 }
 
 p.post_read::before{
-  content: "It's read";
+  content: "";
 }
 p.post_not_read::before{
-  content: "It is not read";
+  content: "";
 }
 </style>

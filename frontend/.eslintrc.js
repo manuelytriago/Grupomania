@@ -1,4 +1,7 @@
 module.exports = {
+  devServer: {
+    https: true
+  },
   root: true,
   env: {
     node: true

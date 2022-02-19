@@ -1,6 +1,8 @@
 //MONGODB CONNECTION:mongodb+srv://project6:<password>@cluster0.c189u.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 
 const express = require('express');
+var  XMLHttpRequest = require('xhr2');
+const fetch = require('node-fetch');
 const bodyParser = require('body-parser');
 const path =  require('path');
 var mongoMask = require('mongo-mask')
@@ -23,11 +25,12 @@ const app = express();
 // Force sync all models 
 // It will drop the table first  
 // and re-create it afterwards 
+/*
 try {
   sequelize.sync({force:false})
 } catch (error) {
     console.log(error)
-}
+}*/
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded

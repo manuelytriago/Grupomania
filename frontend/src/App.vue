@@ -1,16 +1,18 @@
 <template>
-<div>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+<div id="main">
+  <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
-      <a class="navbar-brand me-0" href="/dashboard">
-      <img src="./assets/images/icon.png" alt="" width="72" height="72">
-      </a>
+      <router-link class="navbar-brand me-0" to="/dashboard">
+      <img src="./assets/images/icon-left-font-monochrome-black.svg" alt="Grupomania" >
+      </router-link> 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <router-link  class="navbar-brand me-0" to="/dashboard">Grupomania</router-link> 
       <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <div class="navbar-nav ms-auto me-3 mb-2 mb-lg-0">
+          <li class="nav-item">
+            <router-link @click="logout()" class="nav-link" v-if="!isdashboardPage()" to="/">{{this.user.firstname+' '+this.user.lastname}}</router-link> 
+          </li>
           <li class="nav-item">
             <router-link @click="logout()" class="nav-link" v-if="!isdashboardPage()" to="/">Log out </router-link> 
           </li>
@@ -23,12 +25,21 @@
           <li class="nav-item">
             <router-link class="nav-link" v-if="!isdashboardPage()" to="/profile"> Profile </router-link> 
           </li>
+          <li id="notification" v-if="notification()" class="nav-item bg-secondary rounded-pill">
+          <router-link class="nav-link" v-if="!isdashboardPage()" to="/dashboard"> Inbox 
+          <span v-if="this.user.post_unread" >
+            {{this.user.post_unread}}
+          </span>
+          </router-link>
+          </li>
+      
+        
         </div>
       </div>
     </div>
   </nav>
   <router-view/>
-  </div> 
+</div> 
 </template>
 <script>
 
@@ -41,7 +52,44 @@ import { mapState } from "vuex";
       user: (state) => state.user
     })
   },
+   /*mounted(){
+     
+     var axios = require('axios');
+var data = JSON.stringify({
+  "APIKey": "d523ee09a90c44d5a39c4612f4b7a1b8",
+  "APIPassword": "5454986d20c748fcbc24e8f417a15f03"
+});
+
+var config = {
+  method: 'post',
+  url: 'https://api.marketman.com/v3/buyers/auth/GetToken',
+  body : '{"APIKey": "d523ee09a90c44d5a39c4612f4b7a1b8","APIPassword": "5454986d20c748fcbc24e8f417a15f03"}',
+  headers: { 
+    'Content-Type': 'application/json',
+  },
+};
+
+axios(config)
+.then(function (response) {
+  console.log(JSON.stringify(response.data));
+})
+.catch(function (error) {
+  console.log(error);
+});
+
+   },*/
+  
+    mounted(){
+       },
     methods: {
+       notification: function() {
+         if ( this.user.post_unread >= 1 ){
+           return true
+         }else{
+            return false
+         }
+
+       },
       isdashboardPage: function() {
         if ( this.$route.path === '/' || this.$route.path === '/signup'){
           return true
@@ -56,6 +104,7 @@ import { mapState } from "vuex";
           return false;
         }
       },
+
      logout() {
        //sessionStorage.clear();
         this.$store.commit('clear'); 
@@ -63,15 +112,24 @@ import { mapState } from "vuex";
       }
     },
   };
+
 </script>
 
 <style lang="scss">
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100%;
 }
 
 #nav {

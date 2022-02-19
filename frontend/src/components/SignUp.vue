@@ -55,6 +55,8 @@
 //import { VueTelInput } from 'vue3-tel-input'
 //import 'vue3-tel-input/dist/vue3-tel-input.css'
 import { mapState } from "vuex";
+
+const script =  require('../../../backend/js/script');
 //import axios from "axios";
 export default {
   //components: { VueTelInput },
@@ -103,19 +105,22 @@ export default {
           lastname : this.formdata.lastname.toUpperCase(),
           phonenumber : this.formdata.phone,
         }
-          
-        this.$http.post(url, data1)
-          .then(response => {
-            answer.innerHTML = response.data;
-            this.$store.commit('login',response); 
-             if(response.status === 201 ){
-             this.$router.push('/dashboard')
-             }
-            
-          })
-          .catch(error => {
-            answer.innerHTML = error.response.data.message;
-          });
+        const value = script.checkPassword(this.formdata.password);
+        if(value.conditional == true){ 
+          this.$http.post(url, data1).then(response => {
+              answer.innerHTML = response.data;
+              this.$store.commit('login',response); 
+              if(response.status === 201 ){
+              this.$router.push('/dashboard')
+              }
+              
+            })
+            .catch(error => {
+              answer.innerHTML = error.response.data.message;
+            });
+        }else{
+          answer.innerHTML = value.message
+        }
       } 
       
       else {

@@ -1,41 +1,40 @@
 <template>
-  <div class="hello">
+  <div id="main">
     <h1>{{ msg }}</h1>
-   
-<main class="form-signin">
-  <img class="mb-4" src="../assets/images/icon.png" alt="" width="72" height="72">
-    
-  <form>
-    
-    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+    <main class="form-signin">
+      <img class="mb-4 img-fluid" src="../assets/images/icon-left-font-monochrome-white.svg" alt="Grupomania">
+        
+      <form>
+        
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
-    <div class="form-floating">
-      <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="username" required>
-      <label for="floatingInput">Email address</label>
-    </div>
-    <div class="form-floating">
-      <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="password" required>
-      <label for="floatingPassword">Password</label>
-    </div>
+        <div class="form-floating">
+          <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="username" required>
+          <label for="floatingInput">Email address</label>
+        </div>
+        <div class="form-floating">
+          <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="password" required>
+          <label for="floatingPassword">Password</label>
+        </div>
 
-    <div class="checkbox mb-3">
-      <label>
-        <input type="checkbox" value="remember-me"> Remember me
-      </label>
-    </div>
-     <div class="checkbox mb-3">
-    <button class="w-100 btn btn-lg btn-primary" type="submit" @click="SignInUser">Sign In</button>
+        <div class="checkbox mb-3">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div>
+        <div class="checkbox mb-3">
+        <button class="w-100 btn btn-lg btn-primary" type="submit" @click="SignInUser">Sign In</button>
 
-    </div>
+        </div>
 
-     <div class="checkbox mb-3">
-    <button class="w-100 btn btn-lg btn-primary" type="submit"  @click="SignUpUser">Sign Up</button>
-    
-    </div>
-    <p class="mt-5 mb-3 alert-danger" id="response" > {{user}} </p>
-    <p class="mt-5 mb-3 text-muted">&copy; 2020–2021</p>
-  </form>
-</main>
+        <div class="checkbox mb-3">
+        <button class="w-100 btn btn-lg btn-primary" type="submit"  @click="SignUpUser">Sign Up</button>
+        
+        </div>
+        <p class="mt-5 mb-3 alert-danger" id="response" > {{user}} </p>
+        <p class="mt-5 mb-3 text-muted">&copy; 2020–2021</p>
+      </form>
+    </main>
 
   </div>
 </template>
@@ -91,6 +90,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+#main {
+    height: 100%;
+}
 h3 {
   margin: 40px 0 0;
 }

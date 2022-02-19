@@ -1,14 +1,14 @@
 <template>
-  <div class="about">
-   <div class="hello">
+  <div id="main" class="bg-secondary bg-gradient">
+   <div class="bg-secondary bg-gradient">
     <h1>{{ msg }}</h1>
     <h1 class="h3 mb-3 fw-normal">You are log in</h1>
 
     <div id="createpost" class="border mb-sm-1 mb-1 me-sm-5 ms-sm-5 me-5 ms-5 row h-75">
-      <div id="logo" class="border border-primary col-2 col-sm-2 col-lg-2 col-xl-2 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 "> 
-        <a class="navbar-brand me-0 pt-0 pb-0 w-100 h-100" href="#">
-        <img src="../assets/images/icon.svg" class="img-fluid" alt="" width="25" height="25">
-        </a>
+      <div id="logo" class="d-flex justify-content-center border border-primary col-2 col-sm-2 col-lg-2 col-xl-2 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 "> 
+        <a class="navbar-brand d-flex justify-content-center" href="#">
+        <img class="img-fluid" src="../assets/images/icon-left-font-monochrome-white.svg" alt="Grupomania">
+       </a>
       </div>
       <div id="comment" class="border border-primary col-6 col-sm-8 ps-0 pe-0 col-lg-8 col-xl-8 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 ">
         <input type="text" class=" form-control w-100 h-100" id="comment1" placeholder="WRITE YOUR POST" v-model="comment" required>
@@ -24,13 +24,13 @@
       <div id="upload" class="d-flex align-items-center justify-content-center border border-primary col-2 col-sm-1 col-lg-1 col-xl-1 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 "> 
          <div class="">
            <a class="navbar-brand me-0 pt-0 pb-0 w-100 h-100" href="#" @click="onUploadFile">
-            <img src="../assets/images/clip.svg" class="img-fluid" alt="" width="25" height="25">
+            <img src="../assets/images/clip3.svg" class="img-fluid" alt="files">
           </a>
           <input type="file" name="files" style="display: none" id="files" ref="fileInput" accept="image/*, video/*" @change="onFilePicked"/>
          </div>
         
       </div>
-      <div id="uploaded" class="border border-primary col-12 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 "> 
+      <div id="uploaded" class="d-none border border-primary col-12 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 "> 
         <div id="imageUploaded" class="border border-primary col-12 w">
           
         </div>
@@ -38,7 +38,7 @@
     </div>
 
         <div v-if="posts.length" id="posts" class="border row-cols-lg-2 me-5 ms-5 col">
-          <All  v-on:updatePosts="updateparent" :posts_shared="posts"/>
+          <All  v-on:updatePosts="updateparent" :posts_shared="posts" :posts_tags="tags"/>
         </div>
       </div>
 
@@ -66,6 +66,7 @@ export default {
       video: null,
       multimedia: null,
       posts: [],
+      tags: [],
       replyresponse:null,
       user_tag:null,
       replytext: []
@@ -120,12 +121,14 @@ export default {
       let url = "/comment/"+this.user.id;
         
         this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
+
           let check = typeof(JSON.parse(JSON.stringify(response.data.comments)));
           if(check!= 'Array'){
           this.posts = JSON.parse(JSON.stringify(response.data.comments));
           }
           this.replyresponse = JSON.parse(JSON.stringify(response.data.reply));
           this.user_tag = JSON.parse(JSON.stringify(response.data.user));
+          this.tags = JSON.parse(JSON.stringify(response.data.user));
           })
           .catch(error => {
             console.error(error);
@@ -285,11 +288,18 @@ export default {
       
       fileReader.readAsDataURL(files[0])
       this.multimedia = files[0]; 
+      const picture = document.getElementById('uploaded');
+      picture.classList.replace('d-none', 'd-block');
         //Take the first selected file
         
     },
     clear () {
       let images = document.getElementById("imageUploaded");       
+      let picture = document.getElementById('uploaded');
+
+      if (document.getElementById("uploaded")){
+      picture.classList.replace('d-block', 'd-none');
+      }
       if (document.getElementById("video")){
         const picture1 = document.getElementById('video');
             images.removeChild(picture1);
@@ -312,3 +322,18 @@ export default {
 
 }
 </script>
+
+<style lang="scss">
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+}
+
+#main {
+    height: 100%;
+}
+
+
+</style>

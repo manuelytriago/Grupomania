@@ -9,6 +9,9 @@ export default createStore({
       user : '',
       id: '',
       idComment: '',
+      firstname: '',
+      lastname: '',
+      post_unread: '',
     },
     
   },
@@ -17,7 +20,12 @@ export default createStore({
       state.user.token = user.data.token; 
       state.user.user = user.data.email;
       state.user.id = user.data.userId;
+      state.user.firstname = user.data.firstname;
+      state.user.lastname = user.data.lastname;
 
+    },
+    unread(state,unread){
+      state.user.post_unread= unread;
     },
     comment(state,comment){
       state.user.idComment= comment;
