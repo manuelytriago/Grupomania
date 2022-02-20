@@ -31,7 +31,7 @@
         <button class="w-100 btn btn-lg btn-primary" type="submit"  @click="SignUpUser">Sign Up</button>
         
         </div>
-        <p class="mt-5 mb-3 alert-danger" id="response" > {{user}} </p>
+        <p class="mt-5 mb-3 alert-danger" id="response" ></p>
         <p class="mt-5 mb-3 text-muted">&copy; 2020–2021</p>
       </form>
     </main>
@@ -90,9 +90,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-#main {
-    height: 100%;
-}
 h3 {
   margin: 40px 0 0;
 }

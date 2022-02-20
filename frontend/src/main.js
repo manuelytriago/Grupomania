@@ -9,10 +9,12 @@ import VueAxios from 'vue-axios'
 import VueTelInput from 'vue3-tel-input'
 import 'vue3-tel-input/dist/vue3-tel-input.css'
 import Vuelidate from 'vuelidate'
+import  global from './assets/css/global.css';
 const base = axios.create({
   baseURL: "http://localhost:3000/api"
 });
 const app = createApp(App)
+app.use(global)
 app.use(router)
 app.use(store)
 app.use(VueAxios, axios)

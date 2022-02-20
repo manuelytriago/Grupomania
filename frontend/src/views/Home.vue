@@ -1,5 +1,5 @@
 <template>
-  <div id="main" class="bg-secondary bg-gradient">
+  <div id="main" class="bg-secondary bg-gradient mt-body">
    <div class="bg-secondary bg-gradient">
     <h1>{{ msg }}</h1>
     <h1 class="h3 mb-3 fw-normal">You are log in</h1>
@@ -330,10 +330,4 @@ html {
 body {
     height: 100%;
 }
-
-#main {
-    height: 100%;
-}
-
-
 </style>

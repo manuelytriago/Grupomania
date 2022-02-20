@@ -1,5 +1,5 @@
 <template>
-  <div id="main" class="bg-secondary bg-gradient">
+  <div id="main" class="bg-secondary bg-gradient mt-body">
     <!-- <img alt="Vue logo" src="../assets/icon.png">-->
     <ProfileUser msg="Welcome to Your Grupomania Network"/>
   </div>
@@ -21,10 +21,6 @@ html {
     height: 100%;
 }
 body {
-    height: 100%;
-}
-
-#main {
     height: 100%;
 }
 </style>

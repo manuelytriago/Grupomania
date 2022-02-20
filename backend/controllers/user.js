@@ -34,7 +34,7 @@ exports.signup = async (req, res, next) => {
                     });
                     const user2 = await user.save();
                     const token = jwtoken.sign({userId: user.idUser},'RANDOM_TOKEN_SECRET',{ expiresIn: '24H'});
-                                    res.status(201).json({email: user.email,userId: user.idUser,token: token,firstname:user.firstname,lastname:user.lastname});
+                                    res.status(201).json({email: user.email,userId: user.idUser,token: token});
                     }catch (error) {
        
                         res.status(500).json({message: error});

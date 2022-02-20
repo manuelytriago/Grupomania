@@ -1,5 +1,5 @@
 <template>
-  <div id="main" class="bg-secondary bg-gradient">
+  <div id="main" class="bg-secondary bg-gradient mt-body">
     <SignUp msg="Welcome to Your Grupomania Network"/>
   </div>
 </template>
@@ -23,7 +23,4 @@ body {
     height: 100%;
 }
 
-#main {
-    height: 100%;
-}
 </style>

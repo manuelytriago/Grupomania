@@ -1,5 +1,5 @@
 <template>
-  <div id="main" class="bg-secondary bg-gradient">
+  <div id="main" class="bg-secondary bg-gradient mt-body">
     <!-- <img alt="Vue logo" src="../assets/icon.png">-->
     <LogIn msg="Welcome to Your Social Network"/>
   
@@ -18,6 +18,8 @@ export default {
 }
 </script>
 <style lang="scss">
+
+  @import '../assets/css/global.css';
 html {
     height: 100%;
 }
@@ -25,7 +27,4 @@ body {
     height: 100%;
 }
 
-#main {
-    height: 100%;
-}
 </style>
