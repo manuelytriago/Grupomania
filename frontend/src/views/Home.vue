@@ -2,15 +2,13 @@
   <div id="main" class="bg-secondary bg-gradient mt-body">
    <div class="bg-secondary bg-gradient">
     <h1>{{ msg }}</h1>
-    <h1 class="h3 mb-3 fw-normal">You are log in</h1>
-
     <div id="createpost" class="border mb-sm-1 mb-1 me-sm-5 ms-sm-5 me-5 ms-5 row h-75">
       <div id="logo" class="d-flex justify-content-center border border-primary col-2 col-sm-2 col-lg-2 col-xl-2 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 "> 
         <a class="navbar-brand d-flex justify-content-center" href="#">
         <img class="img-fluid" src="../assets/images/icon-left-font-monochrome-white.svg" alt="Grupomania">
        </a>
       </div>
-      <div id="comment" class="border border-primary col-6 col-sm-8 ps-0 pe-0 col-lg-8 col-xl-8 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 ">
+      <div id="comment" class="border border-primary col-6 col-sm-8 ps-0 pe-0 col-lg-8 col-xl-8 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3">
         <input type="text" class=" form-control w-100 h-100" id="comment1" placeholder="WRITE YOUR POST" v-model="comment" required>
       </div>
        <div id="post" @click="post"  class="d-flex align-items-center justify-content-center border border-primary col-2 col-sm-1 col-lg-1 col-xl-1 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 "> 
@@ -37,7 +35,7 @@
       </div>
     </div>
 
-        <div v-if="posts.length" id="posts" class="border row-cols-lg-2 me-5 ms-5 col">
+        <div v-if="posts.length" id="posts" class="border me-5 ms-5 col">
           <All  v-on:updatePosts="updateparent" :posts_shared="posts" :posts_tags="tags"/>
         </div>
       </div>
@@ -125,10 +123,15 @@ export default {
           let check = typeof(JSON.parse(JSON.stringify(response.data.comments)));
           if(check!= 'Array'){
           this.posts = JSON.parse(JSON.stringify(response.data.comments));
-          }
           this.replyresponse = JSON.parse(JSON.stringify(response.data.reply));
           this.user_tag = JSON.parse(JSON.stringify(response.data.user));
           this.tags = JSON.parse(JSON.stringify(response.data.user));
+          }else{ 
+          this.posts = JSON.stringify(response.data.comments);
+          this.replyresponse = JSON.parse(JSON.stringify(response.data.reply));
+          this.user_tag = JSON.parse(JSON.stringify(response.data.user));
+          this.tags = JSON.parse(JSON.stringify(response.data.user));
+          }
           })
           .catch(error => {
             console.error(error);
@@ -169,6 +172,16 @@ export default {
         formData.append("files", fileField.files[0])
         formData.append("body", JSON.stringify(data1));
         this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
+          if(response.status == 201){
+          answer.classList.remove('alert-danger');
+          answer.classList.add('alert-success');
+          answer.innerHTML = "Post read"
+           }else{
+          answer.classList.remove('alert-success');
+          answer.classList.add('alert-danger');
+          answer.innerHTML = "Something went wrong"
+          }
+          
           this.addPost(response.data.message.idUserComment,response.data.message.idComment)
           this.clear()
           this.dataPosts();

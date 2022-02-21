@@ -1,6 +1,6 @@
 # frontend
 
-## Engine must be >=8 <16
+## Engine must be >=8 <=14
 
 ## Project setup
 ```
@@ -24,6 +24,8 @@ npm run lint
 ### Lints and fixes files
 ```
 npm install -D sass-loader@^10 sass
+
+### 
 
 
 ### Customize configuration

@@ -10,28 +10,28 @@
     <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
     <div class="form-floating">
-      <input for="validationDefaultUsername" type="email" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="formdata.username" required>
-      <label for="floatingInput">Email address</label>
+      <input oninvalid="this.setCustomValidity('Please fill out your email')" type="email" class="form-control" id="validationDefaultUsername" placeholder="name@example.com" v-model="formdata.username" required>
+      <label for="validationDefaultUsername"  >Email address</label>
     </div>
      <div class="form-floating">
-      <input type="text" class="form-control text-uppercase" id="floatingInput" placeholder="Victor" v-model="formdata.firstname" required>
-      <label for="floatingInput">First Name</label>
+      <input oninvalid="this.setCustomValidity('Please fill out your first name')" type="text" class="form-control text-uppercase" id="validationfirst" placeholder="Victor" v-model="formdata.firstname" required>
+      <label for="validationfirst">First Name</label>
     </div>
      <div class="form-floating">
-      <input type="text" class="form-control text-uppercase" id="floatingInput" placeholder="Salazar" v-model="formdata.lastname" required>
-      <label for="floatingInput">Last Name</label>
+      <input oninvalid="this.setCustomValidity('Please fill out your last name')" type="text" class="form-control text-uppercase" id="validationlast" placeholder="Salazar" v-model="formdata.lastname" required>
+      <label for="validationlast">Last Name</label>
     </div>
     <div class="form-floating">
-       <input  type="tel" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" class="form-control text-uppercase"  placeholder="111-1111111" v-model="formdata.phone" required>
-      <label for="tel">Phone Number</label>
+       <input oninvalid="this.setCustomValidity('Phone number must be 10 digits with no spaces and not dashes')" id="validationphone" type="tel" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" class="form-control text-uppercase"  placeholder="111-1111111" v-model="formdata.phone" required>
+      <label for="validationphone">Phone Number</label>
     </div>
     <div class="form-floating">
-      <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="formdata.password" required>
-      <label for="floatingPassword">Password</label>
+      <input type="password" class="form-control" id="validationpassword" placeholder="Password" v-model="formdata.password" required>
+      <label for="validationpassword">Password</label>
     </div>
     <div class="form-floating">
-      <input type="password" class="form-control" id="floatingPassword2" placeholder="password confirmation" v-model="formdata.password_confirmation" required>
-      <label for="floatingPassword2">Password Confirmation</label>
+      <input type="password" class="form-control" id="validationpassword2" placeholder="password confirmation" v-model="formdata.password_confirmation" required>
+      <label for="validationpassword2">Password Confirmation</label>
     </div>
 
     <div class="checkbox mb-3">

@@ -25,12 +25,12 @@ const app = express();
 // Force sync all models 
 // It will drop the table first  
 // and re-create it afterwards 
-/*
+
 try {
   sequelize.sync({force:false})
 } catch (error) {
     console.log(error)
-}*/
+}
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded

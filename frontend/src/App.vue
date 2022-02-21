@@ -55,36 +55,6 @@ import { mapState } from "vuex";
       user: (state) => state.user
     })
   },
-   /*mounted(){
-     
-     var axios = require('axios');
-var data = JSON.stringify({
-  "APIKey": "d523ee09a90c44d5a39c4612f4b7a1b8",
-  "APIPassword": "5454986d20c748fcbc24e8f417a15f03"
-});
-
-var config = {
-  method: 'post',
-  url: 'https://api.marketman.com/v3/buyers/auth/GetToken',
-  body : '{"APIKey": "d523ee09a90c44d5a39c4612f4b7a1b8","APIPassword": "5454986d20c748fcbc24e8f417a15f03"}',
-  headers: { 
-    'Content-Type': 'application/json',
-  },
-};
-
-axios(config)
-.then(function (response) {
-  console.log(JSON.stringify(response.data));
-})
-.catch(function (error) {
-  console.log(error);
-});
-
-   },*/
-  
-    mounted(){
-      
-       },
     methods: {
        notification: function() {
          if ( this.user.post_unread >= 1 ){

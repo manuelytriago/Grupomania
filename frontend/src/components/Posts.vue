@@ -1,5 +1,6 @@
 <template>
-    <div v-if="posts_shared" id="posts" class="me-5 ms-5 col margin_half" >
+    <div v-if="posts_shared" id="posts" class="col-6 col-sm-8 ps-0 pe-0 col-lg-8 col-xl-8 offset-1 offset-sm-2 offset-lg-2 offset-xl-2 " >
+        <p class="mt-5 mb-3 alert-danger" id="answer"></p>
       <div :class="postsdata.user_tag == true? 'background_read' : 'background_not_read'" v-for="postsdata in posts_shared" :key="postsdata.idComment" :id="'posts'+postsdata.idComment" class="border border-3 rounded col-12 mt-sm-3 mb-sm-3 mt-2 mb-2 me-xl-0 ms-xl-0">
          <div id="posts_information" class="d-inline-flex col-12 mt-sm-3">
             <div class="d-inline-flex flex-row text-start mb-0 col-12">
@@ -67,7 +68,7 @@
            
           </div>
       </div> 
-           <p class="mt-5 mb-3 alert-danger" id="answer"></p>
+         
     </div>
 
 </template>
@@ -177,8 +178,12 @@ export default {
          this.$http.post(url,data1,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           let answer = document.getElementById("answer");
           if(response.status == 201){
+          answer.classList.remove('alert-danger');
+          answer.classList.add('alert-success');
           answer.innerHTML = "Post read"
            }else{
+          answer.classList.remove('alert-success');
+          answer.classList.add('alert-danger');
           answer.innerHTML = "Something went wrong"
           }
           })
@@ -205,8 +210,12 @@ export default {
           this.clear()
          let answer = document.getElementById("answer");
           if(response.status == 201){
+          answer.classList.remove('alert-danger');
+          answer.classList.add('alert-success');
           answer.innerHTML = "Post created"
           }else{
+          answer.classList.remove('alert-success');
+          answer.classList.add('alert-danger');
           answer.innerHTML = "Something went wrong"
           }
           })
@@ -243,8 +252,12 @@ export default {
           this.clear()
          let answer = document.getElementById("answer");
           if(response.status == 201){
+          answer.classList.remove('alert-danger');
+          answer.classList.add('alert-success');
           answer.innerHTML = "Reply created"
           }else{
+          answer.classList.remove('alert-success');
+          answer.classList.add('alert-danger');
           answer.innerHTML = "Something went wrong"
           }
         }).catch(error => {
