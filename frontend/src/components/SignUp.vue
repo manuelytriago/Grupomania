@@ -4,7 +4,7 @@
    
 <main class="form-signin">
   
-  <form @submit.prevent="submit">
+  <form>
     <img class="mb-4" src="../assets/images/icon.png" alt="" width="72" height="72">
     
     <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
@@ -22,7 +22,7 @@
       <label for="validationlast">Last Name</label>
     </div>
     <div class="form-floating">
-       <input oninvalid="this.setCustomValidity('Phone number must be 10 digits with no spaces and not dashes')" id="validationphone" type="tel" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" class="form-control text-uppercase"  placeholder="111-1111111" v-model="formdata.phone" required>
+       <input type="text"  pattern="/^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/" oninvalid="this.setCustomValidity('Phone number must be 10 digits with no spaces and not dashes')" id="validationphone"  class="form-control" placeholder="1111111111" v-model="formdata.phone" required>
       <label for="validationphone">Phone Number</label>
     </div>
     <div class="form-floating">
@@ -33,14 +33,15 @@
       <input type="password" class="form-control" id="validationpassword2" placeholder="password confirmation" v-model="formdata.password_confirmation" required>
       <label for="validationpassword2">Password Confirmation</label>
     </div>
-
+<!--
     <div class="checkbox mb-3">
       <label>
         <input type="checkbox" value="remember-me"> Remember me
       </label>
     </div>
-     <div class="checkbox mb-3">
-    <button class="w-100 btn btn-lg btn-primary" type="submit" >Sign Up</button>
+    -->
+     <div class="checkbox mb-3 mt-4">
+    <button class="w-100 btn btn-lg btn-primary" type="submit" @click="submit" >Sign Up</button>
     </div>
 
     <p class="mt-5 mb-3 alert-danger" id="answer"></p>
@@ -86,18 +87,24 @@ export default {
     submit(){ 
       console.log("this.formdata") 
       console.log(this.formdata.phone)
+      let checkPass = script.checkPassword(this.formdata.password);
+      let checkphone = script.checkPhoneNumber(this.formdata.phone);
     let answer = document.getElementById("answer");
-      if (this.formdata.password === "" && this.formdata.password_confirmation === "" && this.formdata.username ==="") {
+      if (this.formdata.firstname === ""&& this.formdata.lastname === "" && this.formdata.phone === "" && this.formdata.password === "" && this.formdata.password_confirmation === "" && this.formdata.username ==="") {
         this.formdata.password = ""
         this.formdata.password_confirmation = ""
-        answer.innerHTML = "Please enter email and Passwords";
+        answer.innerHTML = "Please enter all fields";
       
       }
       else if (this.formdata.password === "" && this.formdata.password_confirmation === "" && this.formdata.username !="") {
         answer.innerHTML = "Please enter passwords";
+      } 
+      else if(this.formdata.password !== this.formdata.password_confirmation){
+        answer.innerHTML = "Please both password must be equal";
       }
-      else if (this.formdata.password === this.formdata.password_confirmation && this.formdata.password.length > 0) {
-        let url = "http://localhost:3000/api/auth/signup";
+      else if (this.formdata.password === this.formdata.password_confirmation && checkPass['conditional'] && checkphone['conditional'] && this.formdata.username !=""  && this.formdata.firstname !=""  && this.formdata.lastname !="") {
+       
+       let url = "http://localhost:3000/api/auth/signup";
         let data1 = {
           email : this.formdata.username,
           password : this.formdata.password,
@@ -105,8 +112,9 @@ export default {
           lastname : this.formdata.lastname.toUpperCase(),
           phonenumber : this.formdata.phone,
         }
+        console.log(checkphone)
         const value = script.checkPassword(this.formdata.password);
-        if(value.conditional == true){ 
+        if(checkPass['conditional'] && checkphone['conditional']){ 
           this.$http.post(url, data1).then(response => {
               answer.innerHTML = response.data;
               this.$store.commit('login',response); 
@@ -121,12 +129,8 @@ export default {
         }else{
           answer.innerHTML = value.message
         }
-      } 
-      
-      else {
-        this.formdata.password = ""
-        this.formdata.password_confirmation = ""
-        answer.innerHTML = "Passwords do not match";
+      }else {
+        answer.innerHTML = checkphone['message'];
       }
     
     }

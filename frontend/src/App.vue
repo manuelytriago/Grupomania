@@ -71,6 +71,13 @@ import { mapState } from "vuex";
           return false
         }
       },
+      inbox: function() {
+        if ( this.$route.path === '/' || this.$route.path === '/signup'){
+          return true
+        }else{
+          return false
+        }
+      },
       isauth: function() {
         if(this.user.user != "" || this.user.token != ""){
           return true;

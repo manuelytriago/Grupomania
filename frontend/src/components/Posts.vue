@@ -1,5 +1,5 @@
 <template>
-    <div v-if="posts_shared" id="posts" class="col-6 col-sm-8 ps-0 pe-0 col-lg-8 col-xl-8 offset-1 offset-sm-2 offset-lg-2 offset-xl-2 " >
+    <div v-if="posts_shared" id="posts" class="pb-5 col-6 col-sm-8 ps-0 pe-0 col-lg-8 col-xl-8 offset-1 offset-sm-2 offset-lg-2 offset-xl-2 " >
         <p class="mt-5 mb-3 alert-danger" id="answer"></p>
       <div :class="postsdata.user_tag == true? 'background_read' : 'background_not_read'" v-for="postsdata in posts_shared" :key="postsdata.idComment" :id="'posts'+postsdata.idComment" class="border border-3 rounded col-12 mt-sm-3 mb-sm-3 mt-2 mb-2 me-xl-0 ms-xl-0">
          <div id="posts_information" class="d-inline-flex col-12 mt-sm-3">
@@ -25,15 +25,15 @@
               </p>  
             </div>
           </div>
-          <div v-if="postsdata.video" id="postsmultimedia" class="border border-primary col-12 w">
+          <div v-if="postsdata.video" id="postsmultimedia" class="col-12 w">
             <video class="img-fluid" controls>
                 <source :src="require('../../../assets/'+postsdata.video)" type="video/mp4">
               </video> 
           </div>
-          <div v-if="postsdata.image" id="postsimages" class="border border-primary col-12">
+          <div v-if="postsdata.image" id="postsimages" class="col-12">
             <img :src="require('../../../assets/'+postsdata.image)" class="img-fluid" :alt="postsdata.image">
           </div>
-          <div v-if="postsdata.reply" id="replypost" class="border border-primary col-12 mt-sm-3">
+          <div v-if="postsdata.reply" id="replypost" class="col-12 mt-sm-3">
             <div id="replyposts" class="border border-primary col-12">
               <p class="text-start ">
               {{postsdata.reply}}
@@ -43,7 +43,7 @@
           <div id="comments_actions" class="col-12 d-flex mt-2 mb-2 me-2">
             <div id="comments" class="border-primary col-xl-12 d-flex flex-row">
               <a class="navbar-brand me-2 pt-0 pb-0" href="#">
-                <img :src="require('../../../assets/comment.webp')" class="img-fluid" alt="" width="25" height="25">
+                <img src="../assets/images/comment.webp"  class="img-fluid" alt="" width="25" height="25">
               </a>
               <a :id="'button'+postsdata.idComment" @click="show(postsdata)" class="navbar-brand me-2 pt-0 pb-0">
                 {{postsdata.total_replies}} Comments
@@ -186,6 +186,9 @@ export default {
           answer.classList.add('alert-danger');
           answer.innerHTML = "Something went wrong"
           }
+          setTimeout(() => {
+          this.clear()
+          },1000)
           })
           .catch(error => {
                if(error.status == 500){
@@ -229,10 +232,13 @@ export default {
     },
   
     show (postdata) {
-        this.$store.commit('unread',this.user.postsUnread-1); 
+      let unread = this.user.post_unread-1;
+      console.log("unread")
+      console.log(unread)
+        this.$store.commit('unread',unread); 
         this.addPost(this.user.id,postdata.idComment)
         this.$store.commit('comment',postdata.idComment);
-        this.$router.push({path:'/replies/',params:{postinfo: postdata}})    
+        this.$router.push({path:'/replies'})    
     },
 
     reply (idComment) {    
@@ -248,8 +254,6 @@ export default {
         const formData = new FormData();
         formData.append("body", JSON.stringify(data1));
         this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
-          this.dataPosts();
-          this.clear()
          let answer = document.getElementById("answer");
           if(response.status == 201){
           answer.classList.remove('alert-danger');
@@ -260,6 +264,10 @@ export default {
           answer.classList.add('alert-danger');
           answer.innerHTML = "Something went wrong"
           }
+          setTimeout(() => {
+          this.clear()
+          this.dataPosts();
+          },1000)
         }).catch(error => {
             console.error(error.message);
         });
@@ -342,7 +350,8 @@ export default {
         
     },
     clear () {
-      let images = document.getElementById("imageUploaded");       
+      let images = document.getElementById("imageUploaded");  
+      let answer = document.getElementById("answer");      
       if (document.getElementById("video")){
         const picture1 = document.getElementById('video');
             images.removeChild(picture1);
@@ -352,6 +361,7 @@ export default {
             images.removeChild(picture1);
         } 
       }
+      answer.innerHTML = ""
       this.username = "",
       this.password = "",
       this.comment = "",

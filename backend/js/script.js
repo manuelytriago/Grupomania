@@ -20,6 +20,7 @@ let checkPassword = function(inputtxt) {
         if(concidence && concidence1 && concidence2 && concidence3) 
         { 
         arr.conditional = true ;
+        arr.message = "";
         return arr;
         }
         if(!concidence) 
@@ -39,6 +40,7 @@ let checkPassword = function(inputtxt) {
         }
         return arr;
 }
+
 // Function to Modify array of likes or dislikes
 let modifyArray = function(usersArray,userId,option) {
   
@@ -75,8 +77,24 @@ let exitsUser = function(usersArray,userId) {
             return false;
         }
     }
+
+let checkPhoneNumber = function(inputtxt) {
+    var phoneno = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
+    var arr = {conditional : false , message : "" };
+    const concidence = inputtxt.match(phoneno);
+    console.log(concidence)
+
+        if(concidence){
+            arr.conditional = true;
+            return arr;
+        }else{ 
+            arr.message = "Phone number is not matching";
+            return arr;
+        }
+      }
         
 module.exports = {
+    checkPhoneNumber,
     checkPassword,
     modifyArray,
     exitsUser,
