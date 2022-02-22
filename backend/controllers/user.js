@@ -92,7 +92,6 @@ exports.login = async (req, res, next) => {
 exports.getuser = async (req, res, next) => {
     try {
         const user = await User.findOne({where: {idUser: req.params.id}});
-        console.log(user)
         res.send(user.dataValues)
       } catch (error) {
         res.status(400).json({message: "Not user found"});
@@ -129,7 +128,6 @@ let arrayTags = [];
                         if (conditional === null){ 
                             var num = req.body.postiD
                             num = num.toString();
-                            console.log(num)
                             arrayTags.push(num)
                             var newarray = arrayTags.toLocaleString();
                             const user2 = await User.update({ tag_posts: newarray }, {
@@ -166,7 +164,6 @@ let arrayTags = [];
 */
                             var num = req.body.postiD
                             num = num.toString();
-                            console.log(num)
                             arrayTags.push(num)
                             var newarray = arrayTags.toLocaleString();
                             const user2 = await User.update({ tag_posts: newarray }, {

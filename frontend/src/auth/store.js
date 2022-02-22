@@ -39,6 +39,9 @@ export default createStore({
       state.user.token = "";
       state.user.id = "";
       state.user.idComment= "";
+      state.user.firstname = "";
+      state.user.lastname = "";
+      state.user.post_unread = "";
     }
   },
   actions: {

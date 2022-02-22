@@ -157,7 +157,6 @@ export default {
       return datestring;
       },
     dataPosts(){    
-      console.log("UPDATING POST SHARED IN POST")
       let url = "/comment/"+this.user.id;
         this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
            this.$emit("updatePosts", JSON.parse(JSON.stringify(response.data.comments)))
@@ -233,8 +232,6 @@ export default {
   
     show (postdata) {
       let unread = this.user.post_unread-1;
-      console.log("unread")
-      console.log(unread)
         this.$store.commit('unread',unread); 
         this.addPost(this.user.id,postdata.idComment)
         this.$store.commit('comment',postdata.idComment);

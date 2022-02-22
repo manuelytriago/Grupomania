@@ -6,14 +6,12 @@ module.exports = (req, res, next) => {
         const token = req.headers.authorization;
         const decodeToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
         const userId = decodeToken.userId;
-        console.log(req.params.id)
-        console.log(userId)
-        /*if(req.params.id && req.params.id !== userId){
+        if(req.params.userId && req.params.userId !== userId){
             throw 'Invalid user ID';
         }
-        else{*/
+        else{
             next();
-        //}
+        }
      }catch{
         res.status(401).json({
             message : new Error('Invalid request')

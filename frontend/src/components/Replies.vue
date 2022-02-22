@@ -113,7 +113,7 @@ export default {
   },
     mounted(){
      this.idcomment = this.user.idComment;
-     this.getPostsReplies(this.$route.param);
+     this.getPostsReplies( this.idcomment);
     },
 
   methods: {

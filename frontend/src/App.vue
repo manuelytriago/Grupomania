@@ -51,14 +51,16 @@ import { mapState } from "vuex";
   export default {
     name: 'App',
     mounted() {
+       const user = localStorage.getItem('userId')
+       console.log(user)
+      if(user) {
       this.user.user = localStorage.getItem('userId')
       this.user.token = localStorage.getItem('token')
       this.user.id = localStorage.getItem('id')
       this.user.post_unread = localStorage.getItem('unread')
       let data1 = localStorage.getItem('id')
-        let url = "http://localhost:3000/api/auth/user/"+data1;  
+        let url = "http://localhost:3000/api/auth/user/"+data1;
         this.$http.get(url,{headers: {'Authorization': localStorage.getItem('token')},params:{'userId': this.user.id}}) .then(response => {
-          console.log(response)
           this.user.firstname = response.data.firstname
           this.user.lastname = response.data.lastname
           this.$router.push('/dashboard')
@@ -66,6 +68,7 @@ import { mapState } from "vuex";
           .catch(error => {
              answer.innerHTML = error;
           });
+    }
     },
     computed: {
     ...mapState({
@@ -97,6 +100,7 @@ import { mapState } from "vuex";
         }
       },
       isauth: function() {
+       
         if(this.user.user != "" || this.user.token != ""){
           return true;
         }else{
@@ -106,6 +110,8 @@ import { mapState } from "vuex";
 
      logout() {
        //sessionStorage.clear();
+      localStorage.removeItem('id')
+      localStorage.removeItem('unread')
       localStorage.removeItem('userId')
       localStorage.removeItem('token')
         this.$store.commit('clear'); 
