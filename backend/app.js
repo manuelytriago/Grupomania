@@ -13,6 +13,7 @@ const commentRoutes = require('./routes/comment');
 const replyRoutes = require('./routes/reply');
 const userRoutes = require('./routes/user');
 const { Console } = require('console');
+const cors = require('cors');
 const app = express();
 // Import sequelize object,
 // Database connection pool managed by Sequelize.
@@ -31,7 +32,7 @@ try {
 } catch (error) {
     console.log(error)
 }
-
+app.use(cors())
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use((req, res, next) => {
@@ -40,6 +41,7 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
 });
+
 
 //app.use('',express.static(path.join(__dirname, 'assets/images')));
 app.use('/api/reply',replyRoutes);

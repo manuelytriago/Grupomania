@@ -78,7 +78,7 @@ export default {
           this.$router.push('/dashboard')
           })
           .catch(error => {
-             answer.innerHTML = error.response.data.message;
+             answer.innerHTML = error;
           });
     
     },

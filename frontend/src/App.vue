@@ -50,11 +50,29 @@ import { mapState } from "vuex";
 
   export default {
     name: 'App',
+    mounted() {
+      this.user.user = localStorage.getItem('userId')
+      this.user.token = localStorage.getItem('token')
+      this.user.id = localStorage.getItem('id')
+      this.user.post_unread = localStorage.getItem('unread')
+      let data1 = localStorage.getItem('id')
+        let url = "http://localhost:3000/api/auth/user/"+data1;  
+        this.$http.get(url,{headers: {'Authorization': localStorage.getItem('token')},params:{'userId': this.user.id}}) .then(response => {
+          console.log(response)
+          this.user.firstname = response.data.firstname
+          this.user.lastname = response.data.lastname
+          this.$router.push('/dashboard')
+          })
+          .catch(error => {
+             answer.innerHTML = error;
+          });
+    },
     computed: {
     ...mapState({
       user: (state) => state.user
     })
   },
+
     methods: {
        notification: function() {
          if ( this.user.post_unread >= 1 ){
@@ -88,6 +106,8 @@ import { mapState } from "vuex";
 
      logout() {
        //sessionStorage.clear();
+      localStorage.removeItem('userId')
+      localStorage.removeItem('token')
         this.$store.commit('clear'); 
         this.$router.push('/');
       }

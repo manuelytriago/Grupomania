@@ -17,14 +17,18 @@ export default createStore({
   },
   mutations: {
     login(state, user){
+      localStorage.setItem('userId', user.data.email)
+      localStorage.setItem('token', user.data.token)
+      localStorage.setItem('id', user.data.userId)
       state.user.token = user.data.token; 
       state.user.user = user.data.email;
       state.user.id = user.data.userId;
       state.user.firstname = user.data.firstname;
       state.user.lastname = user.data.lastname;
-
     },
     unread(state,unread){
+
+      localStorage.setItem('unread', unread)
       state.user.post_unread= unread;
     },
     comment(state,comment){

@@ -71,8 +71,8 @@ export default {
   methods: {
     GetUser(){
         const user = this.user.user;
-        let url = "http://localhost:3000/api/auth/user/"+user;  
-        this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.user}})
+        let url = "http://localhost:3000/api/auth/user/"+this.user.id;  
+        this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}})
         .then(response => {
           this.username = response.data.email;
           var user = response.data.email;

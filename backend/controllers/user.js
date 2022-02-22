@@ -91,7 +91,8 @@ exports.login = async (req, res, next) => {
 /* FUNCTION TO GET A USER DONE!!*/
 exports.getuser = async (req, res, next) => {
     try {
-        const user = await User.findOne({where: {email: req.params.id}});
+        const user = await User.findOne({where: {idUser: req.params.id}});
+        console.log(user)
         res.send(user.dataValues)
       } catch (error) {
         res.status(400).json({message: "Not user found"});
