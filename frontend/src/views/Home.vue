@@ -12,8 +12,8 @@
         <input type="text" class=" form-control w-100 h-100" id="comment1" placeholder="WRITE YOUR POST" v-model="comment" required>
       </div>
        <div id="post" @click="post"  class="border-start-0 rounded-end d-flex align-items-center justify-content-center border col-2 col-sm-1 col-lg-1 col-xl-1 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 "> 
-         <div class="">
-           <a class="navbar-brand me-0 pt-0 pb-0" href="#">
+         <div class="border-primary">
+           <a class="navbar-brand me-0 pt-0 pb-0 link-light" :id="'homepost'" href="#">
             Post
           </a>
         </div>
@@ -36,7 +36,7 @@
     </div>
 
         <div v-if="posts.length" id="posts" class="me-5 ms-5 col">
-          <All  v-on:updatePosts="updateparent" :posts_shared="posts" :posts_tags="tags"/>
+          <All v-on:updatePosts="updateparent" :posts_shared="posts" :posts_tags="tags"/>
         </div>
       </div>
     <p class="mt-5 mb-3 alert-danger" id="answer"></p>

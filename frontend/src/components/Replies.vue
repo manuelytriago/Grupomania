@@ -1,24 +1,7 @@
 <template>
     <div id="post_actions" class="mb-sm-1 mb-1 me-sm-5 ms-sm-5 me-5 ms-5 row h-75">
-      <div id="logo" class="border rounded-start border-end-0 col-2 col-sm-2 col-lg-2 col-xl-2 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 "> 
-        <a class="navbar-brand me-0 pt-0 pb-0 w-100 h-100" href="#">
-        <img src="../assets/images/icon.svg" class="img-fluid" alt="" width="25" height="25">
-        </a>
-      </div>
-      <div id="comment" class="border border-start-0 border-end-0 col-6 col-sm-9 ps-0 pe-0 col-lg-9 col-xl-9 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 ">
-        <input type="text" class=" form-control w-100 h-100" id="reply" placeholder="WRITE YOUR REPLY" v-model="replyComment" required>
-      </div>
-      <div id="post" @click="reply(idcomment)"  class="border rounded-end border-start-0 d-flex align-items-center justify-content-center border col-2 col-sm-1 col-lg-1 col-xl-1 mt-0 mb-0 me-0 ms-0 mt-0 mt-sm-2 mb-sm-2 mt-xl-3 mb-xl-3 "> 
-        <div class="">
-           <a class="navbar-brand me-0 pt-0 pb-0" href="#">
-            Reply
-          </a>
-        </div>
-        
-      </div>
- 
-    <div v-if="replyresponse" id="posts" class="col-7 col-sm-9 ps-0 pe-0 col-lg-9 col-xl-9 offset-1 offset-sm-2 offset-lg-2 offset-xl-2 " >
-      <div :class="'background_read'" v-for="postsdata in replyresponse" :key="postsdata.idComment" :id="'posts'+postsdata.idComment" class="col-12 mt-sm-3 mb-sm-3 mt-2 mb-2 me-xl-0 ms-xl-0">
+    <div v-if="replies_shared" id="posts" class="col-7 col-sm-9 ps-0 pe-0 col-lg-9 col-xl-9 offset-1 offset-sm-2 offset-lg-2 offset-xl-2 " >
+      <div :class="'background_read'" v-for="postsdata in replies_shared" :key="postsdata.idComment" :id="'posts'+postsdata.idComment" class="col-12 mt-sm-3 mb-sm-3 mt-2 mb-2 me-xl-0 ms-xl-0">
          <div id="posts_information" class=" d-inline-flex col-12 mt-sm-3">
             <div class="text-start ps-3 mb-0 col-12">
               <p>
@@ -105,6 +88,10 @@ export default {
     };
   },
   props: {
+     replies_shared: {
+      type: Array,
+      required: true
+    },
   },
    computed: {
     ...mapState({
@@ -112,8 +99,9 @@ export default {
     })
   },
     mounted(){
-     this.idcomment = this.user.idComment;
-     this.getPostsReplies( this.idcomment);
+      this.replyresponse = this.replies_shared
+     this.getPostsReplies( this.user.idComment);
+     console.log("getting replies"+this.user.idComment)
     },
 
   methods: {
@@ -147,7 +135,7 @@ export default {
     getPostsReplies(idComment){
     
       let url = "/comment/"+this.user.id+"/"+idComment;
-        
+        console.log("getting replies"+idComment)
         this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.replyresponse = response.data.comments;
           setTimeout(() => {

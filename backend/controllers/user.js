@@ -60,7 +60,7 @@ exports.signup = async (req, res, next) => {
 exports.login = async (req, res, next) => {
     let user ;
     try {
-        user = await User.findOne({ where: { email: req.body.email } });
+        user = await User.findOne({where: { email: req.body.email } });
     } catch (error) {
         return res.status(402).json({message: "Somethin went wrong"});
     }
@@ -91,7 +91,7 @@ exports.login = async (req, res, next) => {
 /* FUNCTION TO GET A USER DONE!!*/
 exports.getuser = async (req, res, next) => {
     try {
-        const user = await User.findOne({where: {idUser: req.params.id}});
+        const user = await User.findOne({attributes: { exclude: ['password','myDate','createAt','updateAt']}, where: {idUser: req.params.id}});
         res.send(user.dataValues)
       } catch (error) {
         res.status(400).json({message: "Not user found"});

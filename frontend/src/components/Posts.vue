@@ -45,11 +45,11 @@
               <a class="navbar-brand me-2 pt-0 pb-0" href="#">
                 <img src="../assets/images/comment.webp"  class="img-fluid" alt="" width="25" height="25">
               </a>
-              <a :id="'button'+postsdata.idComment" @click="show(postsdata)" class="navbar-brand me-2 pt-0 pb-0">
+              <a href="#" :id="'button'+postsdata.idComment" @click="show(postsdata)" class="navbar-brand me-2 pt-0 pb-0">
                 {{postsdata.total_replies}} Comments
               </a>
                <a href="#" :id="'button'+postsdata.idComment" @click="reply(postsdata.idComment)" class="navbar-brand me-2 pt-0 pb-0">
-                Reply Post
+                Reply
               </a>
 
               <input type="text" :id="postsdata.idComment" class=" form-control w-100 h-100" placeholder="WRITE YOUR REPLY" v-model="replytext[postsdata.idComment]" required>

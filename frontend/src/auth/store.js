@@ -32,6 +32,7 @@ export default createStore({
       state.user.post_unread= unread;
     },
     comment(state,comment){
+      localStorage.setItem('idComment', comment)
       state.user.idComment= comment;
     },
     clear (state) {

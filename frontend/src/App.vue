@@ -56,14 +56,17 @@ import { mapState } from "vuex";
       if(user) {
       this.user.user = localStorage.getItem('userId')
       this.user.token = localStorage.getItem('token')
+      this.user.idComment = localStorage.getItem('idComment')
       this.user.id = localStorage.getItem('id')
       this.user.post_unread = localStorage.getItem('unread')
       let data1 = localStorage.getItem('id')
         let url = "http://localhost:3000/api/auth/user/"+data1;
         this.$http.get(url,{headers: {'Authorization': localStorage.getItem('token')},params:{'userId': this.user.id}}) .then(response => {
+          console.log(response)
           this.user.firstname = response.data.firstname
           this.user.lastname = response.data.lastname
-          this.$router.push('/dashboard')
+
+          this.$router.push(this.$route.path)
           })
           .catch(error => {
              answer.innerHTML = error;
