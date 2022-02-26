@@ -17,11 +17,11 @@ exports.createReply = async(req, res, next) => {
         reply: req.body.reply,
         myDate: date,
         });
-        res.status(201).json({
+        res.status(201).send({
           message: reply
         })
     } catch (error) {
-      res.status(500).json({
+      res.status(500).send({
         message: "Reply was not created"
     });
     }

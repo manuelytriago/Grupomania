@@ -1,6 +1,8 @@
 <template>
+  <div>
+    <h1>{{ msg }}</h1>
     <div v-if="posts_shared" id="posts" class="pb-5 col-6 col-sm-8 ps-0 pe-0 col-lg-8 col-xl-8 offset-1 offset-sm-2 offset-lg-2 offset-xl-2 " >
-        <p class="mt-5 mb-3 alert-danger" id="answer"></p>
+      <p class="mt-5 mb-3 alert-danger" id="answer"></p>
       <div :class="postsdata.user_tag == true? 'background_read' : 'background_not_read'" v-for="postsdata in posts_shared" :key="postsdata.idComment" :id="'posts'+postsdata.idComment" class="border border-3 rounded col-12 mt-sm-3 mb-sm-3 mt-2 mb-2 me-xl-0 ms-xl-0">
          <div id="posts_information" class="d-inline-flex col-12 mt-sm-3">
             <div class="d-inline-flex flex-row text-start mb-0 col-12">
@@ -70,6 +72,7 @@
       </div> 
          
     </div>
+    </div>
 
 </template>
 
@@ -102,7 +105,8 @@ export default {
     posts_tags: {
       type: Array,
       required: true
-    }
+    },
+     msg: String
   },
    computed: {
     ...mapState({
@@ -112,8 +116,7 @@ export default {
     mounted(){
       
       if( this.posts_shared != null){
-        var countComment = this.posts_shared.length;
-        
+        var countComment = this.posts_shared.length ;
         if (this.posts_tags != null){
         var countTags = this.posts_tags.length;
         var postsUnread = countComment - countTags;
@@ -158,14 +161,18 @@ export default {
       },
     dataPosts(){    
       let url = "/comment/"+this.user.id;
+       let answer = document.getElementById("answer");
         this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
            this.$emit("updatePosts", JSON.parse(JSON.stringify(response.data.comments)))
+           
           //this.posts = JSON.parse(JSON.stringify(response.data.comments));
           this.replyresponse = JSON.parse(JSON.stringify(response.data.reply));
           this.user_tag = JSON.parse(JSON.stringify(response.data.user));
           })
           .catch(error => {
-            console.error(error);
+          answer.classList.remove('alert-success');
+          answer.classList.add('alert-danger');
+          answer.innerHTML = error.response.data.message;
           });
     },
     addPost (user, post){
@@ -174,8 +181,8 @@ export default {
           userId: user,
           postiD: post,
         }
+           let answer = document.getElementById("answer");
          this.$http.post(url,data1,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
-          let answer = document.getElementById("answer");
           if(response.status == 201){
           answer.classList.remove('alert-danger');
           answer.classList.add('alert-success');
@@ -191,7 +198,10 @@ export default {
           })
           .catch(error => {
                if(error.status == 500){
-            console.error(error.message);
+                let answer = document.getElementById("answer");
+                answer.classList.remove('alert-success');
+                answer.classList.add('alert-danger');
+                answer.innerHTML = error.response.data.message;
                }
           });
     },
@@ -208,9 +218,9 @@ export default {
         const fileField = document.querySelector('input[type="file"]')
         formData.append("files", fileField.files[0])
         formData.append("body", JSON.stringify(data1));
+         let answer = document.getElementById("answer");
         this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.clear()
-         let answer = document.getElementById("answer");
           if(response.status == 201){
           answer.classList.remove('alert-danger');
           answer.classList.add('alert-success');
@@ -222,7 +232,9 @@ export default {
           }
           })
           .catch(error => {
-            console.error(error);
+          answer.classList.remove('alert-success');
+          answer.classList.add('alert-danger');
+          answer.innerHTML = error.response.data.message;
           });
      }else{
        document.getElementById('comment1').placeholder = "Please write something down to post"
@@ -250,8 +262,9 @@ export default {
         }
         const formData = new FormData();
         formData.append("body", JSON.stringify(data1));
+        let answer = document.getElementById("answer");
         this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
-         let answer = document.getElementById("answer");
+          this.clear()
           if(response.status == 201){
           answer.classList.remove('alert-danger');
           answer.classList.add('alert-success');
@@ -262,11 +275,12 @@ export default {
           answer.innerHTML = "Something went wrong"
           }
           setTimeout(() => {
-          this.clear()
           this.dataPosts();
           },1000)
-        }).catch(error => {
-            console.error(error.message);
+        }).catch(error => { 
+          answer.classList.remove('alert-success');
+          answer.classList.add('alert-danger');
+          answer.innerHTML = error.response.data.message;
         });
      }else{
        document.getElementById(idComment).placeholder = "Please write something down to post"

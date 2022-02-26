@@ -52,7 +52,6 @@ import { mapState } from "vuex";
     name: 'App',
     mounted() {
        const user = localStorage.getItem('userId')
-       console.log(user)
       if(user) {
       this.user.user = localStorage.getItem('userId')
       this.user.token = localStorage.getItem('token')
@@ -61,8 +60,7 @@ import { mapState } from "vuex";
       this.user.post_unread = localStorage.getItem('unread')
       let data1 = localStorage.getItem('id')
         let url = "http://localhost:3000/api/auth/user/"+data1;
-        this.$http.get(url,{headers: {'Authorization': localStorage.getItem('token')},params:{'userId': this.user.id}}) .then(response => {
-          console.log(response)
+        this.$http.get(url,{headers: {'Authorization': localStorage.getItem('token')},params:{'userId': this.user.id}}) .then(response => {     
           this.user.firstname = response.data.firstname
           this.user.lastname = response.data.lastname
 

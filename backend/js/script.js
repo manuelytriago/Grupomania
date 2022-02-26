@@ -82,8 +82,6 @@ let checkPhoneNumber = function(inputtxt) {
     var phoneno = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
     var arr = {conditional : false , message : "" };
     const concidence = inputtxt.match(phoneno);
-    console.log(concidence)
-
         if(concidence){
             arr.conditional = true;
             return arr;

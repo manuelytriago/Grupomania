@@ -3,7 +3,6 @@
     <h1>{{ msg }}</h1>
    
 <main class="form-signin">
-  
   <form>
     <img class="mb-4" src="../assets/images/icon.png" alt="" width="72" height="72">
     
@@ -22,7 +21,7 @@
       <label for="validationlast">Last Name</label>
     </div>
     <div class="form-floating">
-       <input type="text"  pattern="/^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/" oninvalid="this.setCustomValidity('Phone number must be 10 digits with no spaces and not dashes')" id="validationphone"  class="form-control" placeholder="1111111111" v-model="formdata.phone" required>
+       <input type="text" id="validationphone"  class="form-control" placeholder="1111111111" v-model="formdata.phone" required>
       <label for="validationphone">Phone Number</label>
     </div>
     <div class="form-floating">
@@ -41,7 +40,7 @@
     </div>
     -->
      <div class="checkbox mb-3 mt-4">
-    <button class="w-100 btn btn-lg btn-primary" type="submit" @click="submit" >Sign Up</button>
+    <button class="w-100 btn btn-lg btn-primary" type="button" @click="submit" >Sign Up</button>
     </div>
 
     <p class="mt-5 mb-3 alert-danger" id="answer"></p>
@@ -85,11 +84,9 @@ export default {
   },
   methods: {
     submit(){ 
-      console.log("this.formdata") 
-      console.log(this.formdata.phone)
       let checkPass = script.checkPassword(this.formdata.password);
       let checkphone = script.checkPhoneNumber(this.formdata.phone);
-    let answer = document.getElementById("answer");
+      let answer = document.getElementById("answer");
       if (this.formdata.firstname === ""&& this.formdata.lastname === "" && this.formdata.phone === "" && this.formdata.password === "" && this.formdata.password_confirmation === "" && this.formdata.username ==="") {
         this.formdata.password = ""
         this.formdata.password_confirmation = ""
@@ -112,7 +109,6 @@ export default {
           lastname : this.formdata.lastname.toUpperCase(),
           phonenumber : this.formdata.phone,
         }
-        console.log(checkphone)
         const value = script.checkPassword(this.formdata.password);
         if(checkPass['conditional'] && checkphone['conditional']){ 
           this.$http.post(url, data1).then(response => {
@@ -130,7 +126,7 @@ export default {
           answer.innerHTML = value.message
         }
       }else {
-        answer.innerHTML = checkphone['message'];
+       answer.innerHTML = checkphone['message'];
       }
     
     }

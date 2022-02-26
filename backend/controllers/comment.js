@@ -61,14 +61,16 @@ exports.getAllComment = async(req, res, next) => {
     }
 const data = {comments:comments2,reply:replys2,user:tags}
         if(!comments2){
-            return res.status(401).json({
+            return res.status(401).send({
                 message : 'Comments not found'
             });
         }else{
           res.send(data)
         }
   } catch (error) {
-    next(error);
+    return res.status(401).send({
+      message : error
+  });
   }
 }
 
@@ -87,7 +89,7 @@ exports.createComment = async(req, res, next) => {
           comment: req.body.comment,
           video: req.file.filename,
           date: actual_date});
-          res.status(201).json({
+          res.status(201).send({
             message: comment
           })
         
@@ -97,7 +99,7 @@ exports.createComment = async(req, res, next) => {
           comment: req.body.comment,
           image: req.file.filename,
           date: actual_date});
-          res.status(201).json({
+          res.status(201).send({
             message: comment
           })
       }
@@ -110,7 +112,7 @@ exports.createComment = async(req, res, next) => {
           video: null,
           image: null,
           date: actual_date});
-          res.status(201).json({
+          res.status(201).send({
             message: comment
           })
       }
@@ -151,6 +153,6 @@ exports.getOneComment =  async (req, res, next) => {
       res.send(data)
     }
   } catch (error) {
-    res.status(400).json({message: "Not user found"});
+    res.status(400).send({message: "Not user found"});
   }
 }

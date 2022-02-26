@@ -99,9 +99,8 @@ export default {
     })
   },
     mounted(){
-      this.replyresponse = this.replies_shared
-     this.getPostsReplies( this.user.idComment);
-     console.log("getting replies"+this.user.idComment)
+    this.replyresponse = this.replies_shared
+    this.getPostsReplies( this.user.idComment);
     },
 
   methods: {
@@ -135,15 +134,16 @@ export default {
     getPostsReplies(idComment){
     
       let url = "/comment/"+this.user.id+"/"+idComment;
-        console.log("getting replies"+idComment)
         this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
           this.replyresponse = response.data.comments;
-          setTimeout(() => {
           this.clear()
+          setTimeout(() => {
           },1000)
           })
           .catch(error => {
-            console.error(error);
+          answer.classList.remove('alert-success');
+          answer.classList.add('alert-danger');
+          answer.innerHTML = error.response.data.message;
           });
     },
     post () {    
@@ -159,11 +159,11 @@ export default {
         const fileField = document.querySelector('input[type="file"]')
         formData.append("files", fileField.files[0])
         formData.append("body", JSON.stringify(data1));
+        let answer = document.getElementById("answer");
         this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.user}}).then(response => {
            setTimeout(() => {
           this.clear()
           },1000)
-          let answer = document.getElementById("answer");
           if(response.status == 201){
           answer.innerHTML = "Post created"
           }else{
@@ -171,7 +171,9 @@ export default {
           }
           })
           .catch(error => {
-            console.error(error);
+          answer.classList.remove('alert-success');
+          answer.classList.add('alert-danger');
+          answer.innerHTML = error.response.data.message;
           });
      }else{
        document.getElementById('comment1').placeholder = "Please write something down to post"
@@ -223,7 +225,9 @@ export default {
           },1000)
           
           }).catch(error => {
-            console.error(error.message);
+          answer.classList.remove('alert-success');
+          answer.classList.add('alert-danger');
+          answer.innerHTML = error.response.data.message;
           });
      }else{
        document.getElementById(idComment).placeholder = "Please write something down to post"

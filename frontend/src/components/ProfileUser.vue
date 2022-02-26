@@ -71,6 +71,7 @@ export default {
   methods: {
     GetUser(){
         const user = this.user.user;
+        let answer = document.getElementById("answer");
         let url = "http://localhost:3000/api/auth/user/"+this.user.id;  
         this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}})
         .then(response => {
@@ -82,7 +83,9 @@ export default {
           this.phonenumber = response.data.phonenumber;
           })
           .catch(error => {
-            console.error(error);
+          answer.classList.remove('alert-success');
+          answer.classList.add('alert-danger');
+          answer.innerHTML = error.response.data.message;
           });
     },
 
@@ -98,7 +101,9 @@ export default {
           })
           .catch(error => {
             if(!error.response.data.message)
-            answer.innerHTML = error.response.data.message;
+           answer.classList.remove('alert-success');
+          answer.classList.add('alert-danger');
+          answer.innerHTML = error.response.data.message;
           });
     
     }

@@ -1,5 +1,5 @@
 <template>
-  <div id="main" class="bg-secondary bg-gradient mt-body">
+  <div id="main" class="bg-secondary mt-body">
    <div class="bg-secondary bg-gradient">
     <h1>{{ msg }}</h1>
     <div id="createpost" class="mb-sm-1 mb-1 me-sm-5 ms-sm-5 me-5 ms-5 row h-75">
@@ -35,8 +35,10 @@
       </div>
     </div>
 
-        <div v-if="posts.length" id="posts" class="me-5 ms-5 col">
-          <All v-on:updatePosts="updateparent" :posts_shared="posts" :posts_tags="tags"/>
+        <div id="posts" class="me-5 ms-5 col">
+          <All v-if="posts.length"  msg="" v-on:updatePosts="updateparent" :posts_shared="posts" :posts_tags="tags"/>
+          <All v-if="!posts.length"  msg="Not post were found" v-on:updatePosts="updateparent" :posts_shared="posts" :posts_tags="tags"/>
+       
         </div>
       </div>
     <p class="mt-5 mb-3 alert-danger" id="answer"></p>
@@ -123,8 +125,11 @@ export default {
           if(check!= 'Array'){
           this.posts = JSON.parse(JSON.stringify(response.data.comments));
           this.replyresponse = JSON.parse(JSON.stringify(response.data.reply));
-          this.user_tag = JSON.parse(JSON.stringify(response.data.user));
-          this.tags = JSON.parse(JSON.stringify(response.data.user));
+           let check2 = typeof(JSON.parse(JSON.stringify(response.data.user)));
+             if(check2 != 'Array'){
+            this.user_tag = JSON.parse(JSON.stringify(response.data.user));
+            this.tags = JSON.parse(JSON.stringify(response.data.user));
+             }
           }else{ 
           this.posts = JSON.stringify(response.data.comments);
           this.replyresponse = JSON.parse(JSON.stringify(response.data.reply));
@@ -157,7 +162,7 @@ export default {
             console.error(error);
           });
     },
-    post () {    
+    post () {  
      const comment = document.getElementById('comment1').value;
      if(comment != ''){
         let url = "/comment";
@@ -171,21 +176,19 @@ export default {
         formData.append("files", fileField.files[0])
         formData.append("body", JSON.stringify(data1));
         this.$http.post(url,formData,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {
-          
+          this.clear()
          let answer = document.getElementById("answer");
           if(response.status == 201){
           answer.classList.remove('alert-danger');
           answer.classList.add('alert-success');
-          answer.innerHTML = "Post read"
+          answer.innerHTML = "Post Created"
            }else{
           answer.classList.remove('alert-success');
           answer.classList.add('alert-danger');
           answer.innerHTML = "Something went wrong"
           }
-          
           this.addPost(response.data.message.idUserComment,response.data.message.idComment)
           setTimeout(() => {
-          this.clear()
           this.dataPosts();
           },1000)
           })
@@ -226,7 +229,7 @@ export default {
           setTimeout(() => {
           this.clear()
           },1000)
-          console.log("response in component",response);
+           document.getElementById("answer").innerHTML = response
           })
           .catch(error => {
             console.error(error);

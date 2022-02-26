@@ -16,12 +16,6 @@
           <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="password" required>
           <label for="floatingPassword">Password</label>
         </div>
-
-        <div class="checkbox mb-3">
-          <label>
-            <input type="checkbox" value="remember-me"> Remember me
-          </label>
-        </div>
         <div class="checkbox mb-3">
         <button class="w-100 btn btn-lg btn-primary" type="submit" @click="SignInUser">Sign In</button>
 
@@ -72,13 +66,12 @@ export default {
           email : this.username,
           password : this.password,
         }
-         let answer = document.getElementById("response"); 
+        let answer = document.getElementById("response"); 
         this.$http.post(url,data1).then(response => {
           this.$store.commit('login',response); 
           this.$router.push('/dashboard')
-          })
-          .catch(error => {
-             answer.innerHTML = error;
+          }).catch(error => {
+             answer.innerHTML =  error.response.data.message;
           });
     
     },

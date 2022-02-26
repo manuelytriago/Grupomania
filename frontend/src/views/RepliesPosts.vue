@@ -56,8 +56,7 @@ export default {
      this.getPostsReplies(this.user.idComment);
     },
     methods: {
-       getPostsReplies(idComment){
-    console.log(this.idcomment)
+      getPostsReplies(idComment){
       let url = "/comment/"+this.user.id+"/"+idComment;
         
         this.$http.get(url,{headers: {'Authorization': this.user.token},params:{'userId': this.user.id}}).then(response => {

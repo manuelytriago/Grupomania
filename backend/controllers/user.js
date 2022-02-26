@@ -21,7 +21,7 @@ exports.signup = async (req, res, next) => {
             try {
                 user = await User.findOne({ where: { email: req.body.email } });
             } catch (error) {
-                return res.status(402).json({message: "Somethin went wrong"});
+                return res.status(402).send({message: "Somethin went wrong"});
             }
             if(!user){
                 try {
@@ -34,23 +34,23 @@ exports.signup = async (req, res, next) => {
                     });
                     const user2 = await user.save();
                     const token = jwtoken.sign({userId: user.idUser},'RANDOM_TOKEN_SECRET',{ expiresIn: '24H'});
-                                    res.status(201).json({email: user.email,userId: user.idUser,token: token,firstname:user.firstname,lastname:user.lastname});
+                                    res.status(201).send({email: user.email,userId: user.idUser,token: token,firstname:user.firstname,lastname:user.lastname});
                     }catch (error) {
        
-                        res.status(500).json({message: error});
+                        res.status(500).send({message: error});
                     
                     } 
 
             }else{
-                return res.status(402).json({
-                message: "Email already register please change the email"
+                return res.status(402).send({
+                message: "User already exists"
                 });
             }
         } catch (error) {
-                res.status(500).json({message: "error"});
+                res.status(500).send({message: "error"});
         }
     }else{
-        res.status(500).json({message: value.message})
+        res.status(500).send({message: value.message})
     }
         
         
@@ -62,27 +62,25 @@ exports.login = async (req, res, next) => {
     try {
         user = await User.findOne({where: { email: req.body.email } });
     } catch (error) {
-        return res.status(402).json({message: "Somethin went wrong"});
+        res.status(402).send({'message': "Somethin went wrong"});
     }
     if(user){
         try {
             const check = await bcrypt.compare(req.body.password, user.password);
             if(!check){
-                return res.status(401).json({ message: "Password Incorrect"});
+                res.status(401).send({ 'message': "Password Incorrect"});
             }else{
                 const token = jwtoken.sign({userId: user.idUser},'RANDOM_TOKEN_SECRET',{ expiresIn: '24H'});
-                res.status(201).json({email: user.email,userId: user.idUser,token: token,firstname:user.firstname,lastname:user.lastname});
+                res.status(201).send({email: user.email,userId: user.idUser,token: token,firstname:user.firstname,lastname:user.lastname});
             }
         } catch (error) {
-            return res.status(401).json({
+            res.status(401).send({
                 message: "Somethin went wrong"
             });
         }
 
     }else{
-        return res.status(402).json({
-            message: "User not Found"
-        });
+        res.status(400).send({'message': "User not Found"});
     }
            
      
@@ -94,7 +92,7 @@ exports.getuser = async (req, res, next) => {
         const user = await User.findOne({attributes: { exclude: ['password','myDate','createAt','updateAt']}, where: {idUser: req.params.id}});
         res.send(user.dataValues)
       } catch (error) {
-        res.status(400).json({message: "Not user found"});
+        res.status(400).send({message: "Not user found"});
       }
 };
 
@@ -103,11 +101,11 @@ exports.deleteuser = async (req, res, next) => {
     try {
         const user = await User.destroy({where: {email: req.params.id}})
         if(user == 1){
-            res.status(200).json({
+            res.status(200).send({
                 message: 'User Deleted!'
               });
         }else{
-            res.status(400).json(
+            res.status(400).send(
                 {
                     message: "Not user found"
                 });
@@ -136,11 +134,11 @@ let arrayTags = [];
                                 }
                               });  
                               if (user2 == 1) {
-                                res.status(201).json({
+                                res.status(201).send({
                                   message: 'comment viewed successfully'
                                 })
                               } else {
-                                  res.status(500).json({
+                                  res.status(500).send({
                                       message: "comment is already viewed"
                                   });
                               }
@@ -172,11 +170,11 @@ let arrayTags = [];
                                 }
                               });  
                               if (user2 == 1) {
-                                res.status(201).json({
+                                res.status(201).send({
                                   message: 'comment viewed successfully'
                                 })
                               } else {
-                                  res.status(500).json({
+                                  res.status(500).send({
                                 message: "comment is already viewed"
                                   });
                               }
@@ -186,7 +184,7 @@ let arrayTags = [];
                       } catch (error) {
                           res.status("error");
                         if (error.number == 2627){
-                            res.status(500).json({
+                            res.status(500).send({
                                 message: "Something went wrong"
                             });
                         }
